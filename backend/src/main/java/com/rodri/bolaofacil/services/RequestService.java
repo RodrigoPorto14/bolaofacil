@@ -1,0 +1,81 @@
+package com.rodri.bolaofacil.services;
+
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.rodri.bolaofacil.dto.RequestDTO;
+import com.rodri.bolaofacil.enitities.Request;
+import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.enitities.User;
+import com.rodri.bolaofacil.enitities.pk.RequestPK;
+import com.rodri.bolaofacil.repositories.RequestRepository;
+import com.rodri.bolaofacil.repositories.SweepstakeRepository;
+import com.rodri.bolaofacil.repositories.UserRepository;
+import com.rodri.bolaofacil.services.exceptions.DataBaseException;
+import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
+
+@Service
+public class RequestService {
+	
+	@Autowired
+	RequestRepository requestRep;
+	
+	@Autowired
+	UserRepository userRep;
+	
+	@Autowired
+	SweepstakeRepository sweepstakeRep;
+	
+	@Autowired
+	AuthService authService;
+
+	@Transactional(readOnly = true)
+	public List<RequestDTO> findAllBySweepstake(Long sweepstakeId) 
+	{
+		authService.participantIsOwner(sweepstakeId);
+		try
+		{
+			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
+			List<Request> requests = requestRep.findAllBySweepstake(sweepstake);
+			return requests.stream().map(request -> new RequestDTO(request)).toList();
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+	}
+
+	@Transactional
+	public RequestDTO insert(Long sweepstakeId) 
+	{
+		User user = authService.authenticated();
+		try
+		{
+			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
+			Request request = new Request(user,sweepstake);
+			requestRep.save(request);
+			return new RequestDTO(request);
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+	}
+	
+	public void delete(Long sweepstakeId, Long userId) 
+	{
+		authService.participantIsOwner(sweepstakeId);
+		try
+		{
+			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
+			User user = userRep.getReferenceById(userId);
+			requestRep.deleteById(new RequestPK(user,sweepstake));
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException("Id not found " +userId);}
+		catch(DataIntegrityViolationException e) {throw new DataBaseException("Integrity violation");}
+	}
+	
+	
+}

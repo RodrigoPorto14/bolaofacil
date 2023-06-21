@@ -9,6 +9,7 @@ export type ResourceSample =
 {
     id: number;
     name: string;
+    ownerName?: string;
 }
 
 export type Sweepstake = 
@@ -49,7 +50,7 @@ export type Match =
     awayTeamScore: number;
 }
 
-export type Resource = Team | Rule | Match;
+export type Resource = Sweepstake | Rule | Team | Match ;
 
 export type FormProps =
 {
@@ -59,5 +60,6 @@ export type FormProps =
     create? : boolean;
     resource? : Resource;
     children?: ReactNode;
+    gap? : string;
 }
 

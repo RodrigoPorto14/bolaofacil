@@ -26,7 +26,10 @@ public interface SweepstakeRepository extends JpaRepository<Sweepstake,Long>{
 		 + "FROM Sweepstake s "
 		 + "INNER JOIN Participant p ON s = p.id.sweepstake "
 		 + "INNER JOIN User u ON u = p.id.user "
-		 + "WHERE :name <> '' AND (LOWER(s.name) LIKE LOWER(CONCAT('%',:name,'%'))) AND p.role = 2 "
+		 + "LEFT JOIN Participant p2 ON s = p2.id.sweepstake AND p2.id.user = :user "
+		 + "LEFT JOIN Request r ON s = r.id.sweepstake AND r.id.user = :user "
+		 + "WHERE :name <> '' AND (LOWER(s.name) LIKE LOWER(CONCAT('%',:name,'%'))) "
+		 + "AND p.role = 2 AND p2.id.user IS NULL AND r.id.user IS NULL "
 		 + "ORDER BY s.name")
-	List<SweepstakeDTO> findByName(String name);
+	List<SweepstakeDTO> findByName(String name, User user);
 }

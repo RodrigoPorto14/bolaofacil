@@ -10,7 +10,6 @@ type ButtonProps =
 
 const Button = ({children, to, onClick} : ButtonProps) =>
 {
-    
     const buttonType = onClick ? 'button' : 'submit'
     const buttonColor = onClick ? 'bg-red-600' : 'bg-brand-300'
     const buttonHoverColor = onClick ? 'hover:bg-red-800' : 'hover:bg-brand-400'

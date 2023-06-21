@@ -6,15 +6,21 @@ import TeamForm from "../components/team-form";
 import RuleForm from "../components/rule-form";
 import MatchForm from "../components/match-form";
 import { ResourceProps } from "../utils/type";
-import { configItems } from "../utils/nav-items";
+import { menuItems, configItems } from "../utils/nav-items";
 import uploadTeamImage from "../utils/upload-request";
+import SweepstakeForm from "../components/sweepstake-form";
+import { previousPath } from "../utils/path-handler";
 
 const CreateResource = ( { resource } : ResourceProps) =>
 {
+    const isSweepstake = resource === "sweepstakes";
     const { sweepstakeId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const url = `/boloes/${sweepstakeId}/${resource}`;
+
+    const url = isSweepstake ? '/boloes' : `/boloes/${sweepstakeId}/${resource}`;
+    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId);
+    const buttonName = isSweepstake ? "CRIAR" : "ADICIONAR";
 
     const uploadAndSubmit = (data : any) =>
     {
@@ -27,22 +33,22 @@ const CreateResource = ( { resource } : ResourceProps) =>
         makePrivateRequest( {url, data, method: 'POST'} )
             .then((response) =>
             {
-                const path = location.pathname.replace('/create', '')
+                const path = isSweepstake ? location.pathname + '/' + response.data.id : previousPath(location.pathname);
+                console.log(path)
                 navigate(path)
             })
             .catch((error) => console.log(error))
     }
-
-    const buttonName = "ADICIONAR";
 
     return(
 
         <>
             <Header status="logged" />
 
-            <MenuLayout navItems={configItems(sweepstakeId)}>
+            <MenuLayout navItems={navItems}>
 
             { 
+                resource === 'sweepstakes' ? ( <SweepstakeForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
                 resource === 'regras' ? ( <RuleForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :   
                 resource === 'times' ? ( <TeamForm onSubmit={uploadAndSubmit} buttonName={buttonName} create={true} /> ) :
                 resource === 'partidas' ? ( <MatchForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :

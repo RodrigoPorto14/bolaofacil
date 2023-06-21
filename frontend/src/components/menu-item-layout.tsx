@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import Button from "./button"
+import OverflowContainer from "./overflow-container"
 
 type MenuItemLayoutProps = 
 {
@@ -13,11 +14,11 @@ const MenuItemLayout = ({children, to, buttonName} : MenuItemLayoutProps) =>
     return(
 
         <>
-            <div className="flex flex-col h-4/5 gap-2 overflow-y-auto ">
+            <OverflowContainer>
 
                 {children}
 
-            </div>
+            </OverflowContainer>
 
             <div className="mx-auto">
                 <Button to={to}> {buttonName} </Button>

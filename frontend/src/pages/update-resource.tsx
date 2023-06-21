@@ -10,20 +10,23 @@ import { useState, useEffect } from "react";
 import { previousPath } from "../utils/path-handler";
 import { ResourceProps, Resource, Team } from "../utils/type";
 import uploadTeamImage from "../utils/upload-request";
+import SweepstakeForm from "../components/sweepstake-form";
 
 const UpdateResource = ({ resource } : ResourceProps) =>
 {
+    const isSweepstake = resource === "sweepstakes";
     const { sweepstakeId, resourceId } = useParams();
     const [resourceObj, setResourceObj] = useState<Resource>();
     const navigate = useNavigate();
     const location = useLocation();
     const buttonName = "ATUALIZAR";
 
-    const url = `/boloes/${sweepstakeId}/${resource}/`;
+    const url = isSweepstake ? `/boloes/${sweepstakeId}` : `/boloes/${sweepstakeId}/${resource}/${resourceId}`;
 
     useEffect(() =>
     {
-        makePrivateRequest( {url: url + resourceId} )
+        console.log(url)
+        makePrivateRequest( { url } )
             .then((response) =>
             {
                 setResourceObj(response.data)
@@ -34,7 +37,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
 
     const onDelete = () => 
     {
-        makePrivateRequest( {url: url + resourceId, method: 'DELETE'} )
+        makePrivateRequest( {url , method: 'DELETE'} )
             .then((response) =>
             {
                 const path = previousPath(location.pathname)
@@ -52,12 +55,13 @@ const UpdateResource = ({ resource } : ResourceProps) =>
     const onSubmit = (data : any) => 
     {   
         console.log(data)
-        makePrivateRequest( {url: url + resourceId, data, method: 'PUT'} )
+        makePrivateRequest( {url , data, method: 'PUT'} )
             .then((response) =>
             {
-                console.log(response.data)
                 const path = previousPath(location.pathname)
-                navigate(path)
+                
+                if(!isSweepstake)
+                    navigate(path)
             })
             .catch((error) => console.log(error))
     }
@@ -70,6 +74,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
             <MenuLayout navItems={configItems(sweepstakeId)}>
 
             { 
+                resource === 'sweepstakes' ? ( <SweepstakeForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) : 
                 resource === 'regras' ? ( <RuleForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :   
                 resource === 'times' ? ( <TeamForm onSubmit={uploadAndSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :
                 resource === 'partidas' ? ( <MatchForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :

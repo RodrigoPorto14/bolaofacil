@@ -1,17 +1,20 @@
 import Header from "../components/header"
 import MenuLayout from "../components/menu-layout"
 import MenuItem from "../components/menu-item"
+import OverflowContainer from "../components/overflow-container"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faLock, faLockOpen, faRightFromBracket, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { menuItems } from "../utils/nav-items"
 import { Sweepstake } from '../utils/type'
 import { useState } from "react"
 import { makePrivateRequest } from "../utils/request"
+import { useNavigate } from "react-router-dom"
 
 const Search = () =>
 {
     const [inputValue, setInputValue] = useState('');
     const [sweepstakes, setSweepstakes] = useState<Sweepstake[]>([]);
+    const navigate = useNavigate();
 
     const handleSendSearch = () =>
     {
@@ -39,6 +42,27 @@ const Search = () =>
         }
     };
 
+    const onEnter = (sweepstakeId : number) =>
+    {
+        makePrivateRequest({url: `boloes/${sweepstakeId}/participantes`, method: 'POST'})
+            .then(response =>
+            {
+                console.log(response.data)
+                navigate('/sweepstakes')
+            })
+            .catch(error => console.log(error))
+    }
+
+    const onRequest = (sweepstakeId : number) =>
+    {
+        makePrivateRequest({url: `boloes/${sweepstakeId}/requests`, method: 'POST'})
+            .then(response =>
+            {
+                console.log(response.data)
+            })
+            .catch(error => console.log(error))
+    }
+
     return(
 
         <>
@@ -60,24 +84,41 @@ const Search = () =>
                         />
                     </div>
                   
-
-                    <div className="flex flex-col h-4/5 gap-2 overflow-y-auto ">
+                    <OverflowContainer>
 
                         {   
                             sweepstakes.map((sweepstake) =>
                             (
-                                <MenuItem redirect='/' key={sweepstake.id}>
+                                <MenuItem key={sweepstake.id}>
                                     <div className="flex items-center gap-2">
                                         { sweepstake.private_ ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faLockOpen} /> }
                                         <p>{sweepstake.name}</p>
                                     </div>
                                     
-                                    <p>{`Criado por: ${sweepstake.ownerName}`}</p>
+                                    <div className="flex items-center gap-4">
+
+                                        <p>{`Criado por: ${sweepstake.ownerName}`}</p>
+                                        { 
+                                            sweepstake.private_ ? 
+                                            <FontAwesomeIcon 
+                                                className="text-xl hover:text-brand-200 hover:cursor-pointer"
+                                                icon={faEnvelope}
+                                                onClick={() => onRequest(sweepstake.id)}
+                                            /> : 
+                                            <FontAwesomeIcon
+                                                className="text-xl hover:text-brand-200 hover:cursor-pointer"
+                                                icon={faRightFromBracket}
+                                                onClick={() => onEnter(sweepstake.id)} 
+                                            /> 
+                                        }
+
+                                    </div>
+                                    
                                 </MenuItem>
                             ))
                         }
 
-                    </div>
+                    </OverflowContainer>
 
             </MenuLayout>
         </>

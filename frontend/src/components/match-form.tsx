@@ -66,7 +66,6 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
         
     type MatchFormData = z.infer<typeof matchFormSchema>
 
-
     const { sweepstakeId } = useParams();
     const { register, handleSubmit, formState : { errors } } = useForm<MatchFormData>({resolver: zodResolver(matchFormSchema)});
     const [rules, setRules] = useState<ResourceSample[]>([]);

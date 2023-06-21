@@ -48,7 +48,8 @@ public class SweepstakeService {
 	@Transactional(readOnly = true)
 	public List<SweepstakeDTO> findByName(String name)
 	{
-		return sweepstakeRep.findByName(name.trim());
+		User user = authService.authenticated();
+		return sweepstakeRep.findByName(name.trim(), user);
 	}
 	
 	@Transactional

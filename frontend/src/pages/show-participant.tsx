@@ -1,10 +1,11 @@
 import Header from "../components/header"
 import MenuLayout from "../components/menu-layout"
+import MenuItem from "../components/menu-item"
+import OverflowContainer from "../components/overflow-container"
 import { configItems } from "../utils/nav-items"
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
-import MenuItem from "../components/menu-item"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpLong, faBan, faDownLong } from '@fortawesome/free-solid-svg-icons'
 
@@ -69,7 +70,7 @@ const ShowParticipant = () =>
 
             <MenuLayout navItems={configItems(sweepstakeId)}>
 
-                <div className="flex flex-col gap-2 overflow-y-auto">
+                <OverflowContainer>
                 {
                     participants.map((participant) =>
                     (
@@ -81,18 +82,18 @@ const ShowParticipant = () =>
                                 {
                                     participant.role === "PLAYER" &&
                                     <FontAwesomeIcon 
-                                        onClick={() => onChangeRole(participant,"ADMIN")} 
                                         className="text-xl hover:text-brand-200 hover:cursor-pointer" 
                                         icon={faUpLong}
+                                        onClick={() => onChangeRole(participant,"ADMIN")} 
                                     />
                                 }
                                 
                                 {
                                     participant.role === "ADMIN" &&
                                     <FontAwesomeIcon 
-                                        onClick={() => onChangeRole(participant,"PLAYER")}
                                         className="text-xl hover:text-red-500 hover:cursor-pointer" 
                                         icon={faDownLong}
+                                        onClick={() => onChangeRole(participant,"PLAYER")}
                                     />
                                 }
                                 
@@ -109,7 +110,7 @@ const ShowParticipant = () =>
 
                     ))
                 }
-                </div>
+                </OverflowContainer>
 
             </MenuLayout>
         </>

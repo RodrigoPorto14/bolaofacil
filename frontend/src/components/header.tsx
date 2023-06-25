@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import Button from "./button"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { getAuthenticatedNickName } from "../utils/auth";
-import { logout } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider/useAuth";
 
 const logo = require('../img/logo.png') as string;
 
@@ -16,11 +15,12 @@ type HeaderProps =
 const Header = ( { status } : HeaderProps)  =>
 {
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const handleLogout = () =>
     {
-        logout();
-        navigate(0)
+        auth.logout();
+        navigate('/');
     }
 
     return(
@@ -36,7 +36,7 @@ const Header = ( { status } : HeaderProps)  =>
             { 
                 status === 'logged' && 
                 <div className="flex items-center gap-2 text-xl">
-                    <p className="text-white">{getAuthenticatedNickName()}</p>
+                    <p className="text-white">{auth.nickname}</p>
                     <FontAwesomeIcon onClick={handleLogout} className="text-white cursor-pointer hover:text-brand-400" icon={faRightFromBracket} />
                 </div>
                 

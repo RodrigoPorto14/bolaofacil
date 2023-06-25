@@ -42,7 +42,9 @@ public class AuthService {
 	public Participant validateParticipant(Long sweepstakeId)
 	{
 		Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
-		return participantRep.findById(new ParticipantPK(authenticated(),sweepstake)).orElseThrow(() -> new ForbiddenException("Access denied"));
+		User user = authenticated();
+		ParticipantPK participantId = new ParticipantPK(user,sweepstake);
+		return participantRep.findById(participantId).orElseThrow(() -> new ForbiddenException("Access denied"));
 	}
 	
 	private void validateRoles(Long sweepstakeId, Role... roles)

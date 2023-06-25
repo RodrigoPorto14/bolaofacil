@@ -3,30 +3,30 @@ import Home from './pages/home'
 import Login from './pages/login'
 import Register from './pages/register'
 import Search from "./pages/search";
+import Sweepstake from "./pages/sweepstake";
 import ShowResource from "./pages/show-resource";
 import UpdateResource from "./pages/update-resource";
 import ShowParticipant from "./pages/show-participant";
 import ShowRequest from "./pages/show-request";
-import { isAuthenticated } from "./utils/auth";
 import CreateResource from "./pages/create-resource";
+import { useAuth } from "./context/AuthProvider/useAuth";
 
 const Routing = () => 
 {
+  const sweepstakeConfigPath = (resource : string) => '/sweepstakes/:sweepstakeId/config' + resource 
+  const auth = useAuth();
+  const userAuthenticated = auth.userAuthenticated;
 
-  const userAuthenticated = isAuthenticated();
-
-  const sweepstakeConfigPath = (resource : string) => '/sweepstakes/:sweepstakeId/config' + resource
-
-  return (
-    <BrowserRouter>
-      <Routes>
-        
-        {
-          userAuthenticated ? 
-          (
+  if(!auth.isLoading)
+    return (
+      <BrowserRouter>
+        <Routes>
+          {
+            userAuthenticated ? 
             <>
               <Route path='/search' element={<Search />} />
               <Route path='/sweepstakes' element={<ShowResource resource="sweepstakes" />} />
+              <Route path='/sweepstakes/:sweepstakeId' element={<Sweepstake />} />
               <Route path='/sweepstakes/create' element={<CreateResource resource="sweepstakes"/>} />
               <Route path={sweepstakeConfigPath('/sweepstake')} element={<UpdateResource resource="sweepstakes" />} />
               <Route path={sweepstakeConfigPath('/participants')} element={<ShowParticipant/>} />
@@ -40,24 +40,20 @@ const Routing = () =>
               <Route path={sweepstakeConfigPath('/rules/:resourceId')} element={<UpdateResource resource="regras" />} />
               <Route path={sweepstakeConfigPath('/teams/:resourceId')} element={<UpdateResource resource="times" />} />
               <Route path={sweepstakeConfigPath('/matches/:resourceId')} element={<UpdateResource resource="partidas" />} />
-              
-            </>
-          ) 
-          : 
-          (
+            </>        
+            :
             <>
               <Route index element={<Home />} />
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
             </>
-          )
-        }
-        
-        <Route path="*" element={<Navigate to={userAuthenticated ? '/sweepstakes' : '/'} replace />} />
+          }
+          <Route path="*" element={<Navigate to={userAuthenticated ? '/sweepstakes' : '/'} replace />} />
+        </Routes>
+      </BrowserRouter>
+    );
 
-      </Routes>
-    </BrowserRouter>
-  );
+    return <p>Loading</p>
 
 };
 

@@ -20,33 +20,40 @@ type AccessToken =
 }
 
 /****************************************************************** 
-Salva os dados de autenticação no localStorage
+Salva o token no localStorage
 ******************************************************************/
-export const saveSessionData = (loginResponse: LoginResponse) => 
+export const saveToken = (token : string) => 
 {
-  localStorage.setItem('authData', JSON.stringify(loginResponse));
+  localStorage.setItem('token', token);
 }
 
 /****************************************************************** 
-Obtém os dados de autenticação no localStorage
+Salva o token no localStorage
 ******************************************************************/
-export const getSessionData = () => 
+export const removeToken = () => 
 {
-  const sessionData = localStorage.getItem('authData') ?? '{}';
-  const parsedSessionData = JSON.parse(sessionData);
+  localStorage.removeItem('token');
+}
 
-  return parsedSessionData as LoginResponse;
+/****************************************************************** 
+Obtém o token do localStorage
+******************************************************************/
+export const getToken = () => 
+{
+  const token = localStorage.getItem('token') ?? '';
+  return token;
 }
 
 /****************************************************************** 
 Obtém o token de acesso dos dados de autenticação e retorna
 este token decodificado
 ******************************************************************/
-export const getAccessTokenDecoded = (sessionData : LoginResponse) => 
+export const getAccessTokenDecoded = (token : string) => 
 {
   try 
   {
-    const tokenDecoded = jwtDecode(sessionData.access_token);
+    const tokenDecoded = jwtDecode(token);
+    console.log(tokenDecoded)
     return tokenDecoded as AccessToken;
   } 
   catch (error)
@@ -58,9 +65,9 @@ export const getAccessTokenDecoded = (sessionData : LoginResponse) =>
 /****************************************************************** 
 Verifica se o token de acesso ainda é válido
 ******************************************************************/
-export const isTokenValid = (sessionData : LoginResponse) => 
+export const isTokenValid = (token : string) => 
 {
-  const { exp } = getAccessTokenDecoded(sessionData);
+  const { exp } = getAccessTokenDecoded(token);
   return Date.now() <= exp * 1000;
 }
 
@@ -69,23 +76,6 @@ Verifica se o token de acesso contido no localStorage existe e é válido
 ******************************************************************/
 export const isAuthenticated = () => 
 {
-  const sessionData = getSessionData();
-  return !!sessionData.access_token && isTokenValid(sessionData);
-}
-
-/****************************************************************** 
-Obtém o nome do usuário autênticado
-******************************************************************/
-export const getAuthenticatedNickName = () =>
-{
-  const {nickName} = getSessionData()
-  return nickName
-}
-
-/****************************************************************** 
-Remove os dados de autenticação do localStorage
-******************************************************************/
-export const logout = () =>
-{
-  localStorage.removeItem('authData');
+  const token = getToken();
+  return !!token && isTokenValid(token);
 }

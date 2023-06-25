@@ -21,25 +21,25 @@ import com.rodri.bolaofacil.dto.MatchUpdateDTO;
 import com.rodri.bolaofacil.services.MatchService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}")
+@RequestMapping(value = "/boloes/{sweepstakeId}/partidas")
 public class MatchResource {
 
 	@Autowired
 	MatchService service;
 	
-	@GetMapping(value = "/partidas/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<MatchUpdateDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long id)
 	{
 		return ResponseEntity.ok().body(service.findById(sweepstakeId,id));
 	}
 	
-	@GetMapping(value = "/partidas")
+	@GetMapping()
 	public ResponseEntity<List<MatchSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping(value = "/partidas")
+	@PostMapping()
 	public ResponseEntity<MatchInsertDTO> insert(@PathVariable Long sweepstakeId, @RequestBody MatchInsertDTO dto)
 	{
 		dto = service.insert(sweepstakeId, dto);
@@ -47,13 +47,13 @@ public class MatchResource {
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/partidas/{id}")
+	@PutMapping(value = "/{id}")
 	public ResponseEntity<MatchUpdateDTO> update(@PathVariable Long sweepstakeId, @PathVariable Long id, @RequestBody MatchUpdateDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
 	}
 	
-	@DeleteMapping(value="/partidas/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
 	{
 		service.delete(sweepstakeId,id);

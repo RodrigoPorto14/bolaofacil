@@ -8,11 +8,6 @@ public class TeamDTO extends TeamSampleDTO {
 	private String imgUri;
 	
 	public TeamDTO() {}
-	
-	public TeamDTO(Long id, String name, String imgUri) {
-		super(id, name);
-		this.imgUri = imgUri;
-	}
 
 	public TeamDTO(Team entity)
 	{

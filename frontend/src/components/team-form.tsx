@@ -11,7 +11,7 @@ const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
     {
         name: z.string()
                 .nonempty('Campo Obrigatório')
-                .max(20, 'Deve conter no máximo 20 caracteres'),
+                .max(16, 'Deve conter no máximo 16 caracteres'),
         
         imgUri: z.instanceof(FileList)
                     .transform(list => list.item(0))

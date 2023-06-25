@@ -75,8 +75,12 @@ public class RankingService {
 	
 	private void updateCompetitor(Bet bet, CompetitorDTO competitor)
 	{
-		int homeScore = bet.getMatch().getHomeTeamScore();
-		int awayScore = bet.getMatch().getAwayTeamScore();
+		Integer homeScore = bet.getMatch().getHomeTeamScore();
+		Integer awayScore = bet.getMatch().getAwayTeamScore();
+		
+		if(homeScore == null || awayScore == null)
+			return;
+		
 		int homeScoreBetted = bet.getHomeTeamScore();
 		int awayScoreBetted = bet.getAwayTeamScore();
 		

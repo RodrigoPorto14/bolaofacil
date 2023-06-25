@@ -9,30 +9,10 @@ import { Match, ResourceSample, FormProps } from '../utils/type';
 import { useParams } from 'react-router-dom';
 import Input from './input';
 import InputNumber from './input-number';
+import { matchValidation } from '../utils/match-validation';
 
 const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormProps) =>
 {
-   
-    const validBestOf = (bestOf : number, scoreA : number, scoreB : number) => 
-    {
-        const maxScore = Math.ceil(bestOf/2);
-        return (scoreA + scoreB <= bestOf) && (scoreA === maxScore || scoreB === maxScore)
-    }
-        
-    const matchValidation = (data : any) => 
-    {
-        if((data.homeTeamScore === null) !== (data.awayTeamScore === null))
-            return false
-
-        for(let num = 1; num<=5; num+=2)
-        {
-            if(data.type === `MD${num}` && !validBestOf(num, data.homeTeamScore, data.awayTeamScore))
-                return false
-        }
-
-        return true
-    }
-
     const numberValidation = z.number()
                               .min(0,'Deve ser maior ou igual a 0')
                               .max(99,'Deve ser menor ou igual a 99')
@@ -61,7 +41,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
         awayTeamScore: numberValidation
                                       
     }).refine(data => data.homeTeamId !== data.awayTeamId, {message: 'Os times devem ser diferentes', path: ['awayTeamId']})
-      .refine(data => matchValidation(data), {message: 'Placar Inválido', path: ['awayTeamScore']})
+      .refine(data => matchValidation(data.homeTeamScore as number, data.awayTeamScore as number, data.type), {message: 'Placar Inválido', path: ['awayTeamScore']})
       
         
     type MatchFormData = z.infer<typeof matchFormSchema>

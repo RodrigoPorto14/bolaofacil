@@ -1,11 +1,15 @@
 import Routing from "./Routing";
+import { AuthProvider } from "./context/AuthProvider";
 
 function App() 
 
 {
   return (
     
-    <Routing />
+    <AuthProvider>
+      <Routing />
+    </AuthProvider>
+    
 
   );
 }

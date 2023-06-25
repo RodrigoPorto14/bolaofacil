@@ -23,11 +23,13 @@ const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
 
     const changeMobileNav = () => { setShowMobileNav((prevState) => !prevState)}
 
-    const nav = (classes : string) => navItems.map((navItem : NavItem) =>  
+    const navClass = 'flex items-center justify-center text-white font-title h-12 rounded-l-xl';
+
+    const nav = navItems.map((navItem : NavItem) =>  
     ( 
         <NavLink to={navItem.redirect}
                  key={navItem.title} 
-                 className={({ isActive }) => `${classes} ${isActive ? "bg-brand-400" : "hover:bg-brand-500"}`}>    
+                 className={({ isActive }) => `${navClass} ${isActive ? "bg-brand-400" : "hover:bg-brand-500"}`}>    
 
             {navItem.title} 
         </NavLink> 
@@ -41,7 +43,7 @@ const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
 
                 <aside className="hidden lg:flex flex-col w-48 bg-brand-200 rounded-l-xl pl-2 py-2 gap-2">
 
-                    {nav('flex items-center justify-center text-white font-title h-12 rounded-l-xl')}
+                    {nav}
             
                 </aside>
 
@@ -54,7 +56,7 @@ const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
                     showMobileNav && 
                     <div className="absolute z-50 flex flex-col top-10 left-1 bg-brand-200 w-32 lg:hidden rounded-xl shadow-lg gap-1">
 
-                        {nav('flex items-center justify-center text-white font-title h-12 rounded-xl')}
+                        {nav}
 
                     </div> 
 

@@ -6,13 +6,14 @@ type ButtonProps =
     children : ReactNode;
     to? : string;
     onClick? : any
+    isDelete? : boolean;
 }
 
-const Button = ({children, to, onClick} : ButtonProps) =>
+const Button = ({children, to, onClick, isDelete=false} : ButtonProps) =>
 {
-    const buttonType = onClick ? 'button' : 'submit'
-    const buttonColor = onClick ? 'bg-red-600' : 'bg-brand-300'
-    const buttonHoverColor = onClick ? 'hover:bg-red-800' : 'hover:bg-brand-400'
+    const buttonType = isDelete ? 'button' : 'submit'
+    const buttonColor = isDelete ? 'bg-red-600' : 'bg-brand-300'
+    const buttonHoverColor = isDelete ? 'hover:bg-red-800' : 'hover:bg-brand-400'
 
     const button = 
     (

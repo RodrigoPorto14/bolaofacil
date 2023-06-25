@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { CLIENT_ID, CLIENT_SECRET, getSessionData, logout } from './auth';
+import { CLIENT_ID, CLIENT_SECRET, getToken } from '../context/AuthProvider/auth';
+import { useAuth } from '../context/AuthProvider/useAuth';
 
-type LoginData = 
+export type LoginData = 
 {
   username: String;
   password: String;
@@ -15,16 +16,17 @@ Intercepta requisições axios, caso essa requisição tenha sucesso,
 apenas retorna a resposta, caso fracasse com erro 401 (Unauthorized)
 é feito o logout do usuário
 ******************************************************************/
-axios.interceptors.response.use(
+/*axios.interceptors.response.use(
   (response) =>  response, 
   (error) =>
   {
+    const auth = useAuth();
     if (error.response.status === 401)
-      logout();
+      auth.logout()
     
     return Promise.reject(error);
   }
-);
+);*/
 
 /****************************************************************** 
 Realiza requisições axios sem cabeçalho configurado e com a URL base
@@ -45,10 +47,10 @@ configurado e com a URL base já inserida
 ******************************************************************/
 export const makePrivateRequest = (params: AxiosRequestConfig) => 
 {
-  const sessionData = getSessionData();
+  const token = getToken();
 
   const headers = {
-    'Authorization': `Bearer ${sessionData.access_token}`
+    'Authorization': `Bearer ${token}`
   }
 
   return makeRequest({ ...params, headers });
@@ -61,10 +63,10 @@ configurado e com a URL base já inserida
 ******************************************************************/
 export const makeUploadRequest = (params: AxiosRequestConfig) => 
 {
-  const sessionData = getSessionData();
+  const token = getToken();
 
   const headers = {
-    'Authorization': `Bearer ${sessionData.access_token}`,
+    'Authorization': `Bearer ${token}`,
     'Content-Type': 'multipart/form-data'
   }
 
@@ -88,8 +90,6 @@ export const makeLogin = (loginData: LoginData) =>
   }
 
   const payload = qs.stringify({ ...loginData, grant_type: 'password' });
-
-  console.log(payload)
 
   return makeRequest({ url: '/oauth/token', data: payload, method: 'POST', headers });
 

@@ -20,17 +20,17 @@ public class Bet implements Serializable {
 	
 	private Integer homeTeamScore;
 	private Integer awayTeamScore;
-	private BetStatus status;
 	
 	public Bet() {}
 
-	public Bet(User user, Sweepstake sweepstake, Match match, Integer homeTeamScore, Integer awayTeamScore, BetStatus status) {
+	public Bet(User user, Sweepstake sweepstake, Match match, Integer homeTeamScore, Integer awayTeamScore) 
+	{
+		id = new BetPK();
 		id.setUser(user);
 		id.setSweepstake(sweepstake);
 		id.setMatch(match);
 		this.homeTeamScore = homeTeamScore;
 		this.awayTeamScore = awayTeamScore;
-		this.status = status;
 	}
 	
 	public User getUser() { return id.getUser(); }
@@ -59,14 +59,6 @@ public class Bet implements Serializable {
 
 	public void setAwayTeamScore(Integer awayTeamScore) {
 		this.awayTeamScore = awayTeamScore;
-	}
-
-	public BetStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(BetStatus status) {
-		this.status = status;
 	}
 
 	@Override

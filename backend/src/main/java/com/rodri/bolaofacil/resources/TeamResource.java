@@ -23,25 +23,25 @@ import com.rodri.bolaofacil.dto.UriDTO;
 import com.rodri.bolaofacil.services.TeamService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}")
+@RequestMapping(value = "/boloes/{sweepstakeId}/times")
 public class TeamResource {
 
 	@Autowired
 	TeamService service;
 	
-	@GetMapping(value = "/times/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<TeamDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long id)
 	{
 		return ResponseEntity.ok().body(service.findById(sweepstakeId,id));
 	}
 	
-	@GetMapping(value = "/times")
+	@GetMapping()
 	public ResponseEntity<List<TeamSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping(value = "/times")
+	@PostMapping()
 	public ResponseEntity<TeamDTO> insert(@PathVariable Long sweepstakeId, @RequestBody TeamDTO dto)
 	{
 		dto = service.insert(sweepstakeId, dto);
@@ -49,20 +49,20 @@ public class TeamResource {
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/times/{id}")
+	@PutMapping(value = "/{id}")
 	public ResponseEntity<TeamDTO> update(@PathVariable Long sweepstakeId,@PathVariable Long id, @RequestBody TeamDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
 	}
 	
-	@DeleteMapping(value="/times/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
 	{
 		service.delete(sweepstakeId,id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PostMapping(value = "/times/upload")
+	@PostMapping(value = "/upload")
 	public ResponseEntity<UriDTO> uploadFile(@PathVariable Long sweepstakeId, @RequestParam("file") MultipartFile file)
 	{
 		UriDTO dto = service.uploadFile(sweepstakeId, file);

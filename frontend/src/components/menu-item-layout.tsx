@@ -20,7 +20,7 @@ const MenuItemLayout = ({children, to, buttonName} : MenuItemLayoutProps) =>
 
             </OverflowContainer>
 
-            <div className="mx-auto">
+            <div className="flex items-center h-16 mx-auto">
                 <Button to={to}> {buttonName} </Button>
             </div>
         </>

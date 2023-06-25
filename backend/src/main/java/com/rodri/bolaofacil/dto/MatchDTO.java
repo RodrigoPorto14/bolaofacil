@@ -30,7 +30,7 @@ public class MatchDTO implements Serializable {
 		homeTeamScore = entity.getHomeTeamScore();
 		awayTeamScore = entity.getAwayTeamScore();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}

@@ -4,9 +4,8 @@ import AuthFormLayout from '../components/auth-form-layout'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { makeLogin } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
-import { saveSessionData } from '../utils/auth';
+import { useAuth } from '../context/AuthProvider/useAuth';
 
 const loginUserFormSchema = z.object(
 {
@@ -22,26 +21,22 @@ export type LoginUserFormData = z.infer<typeof loginUserFormSchema>
 
 const Login = () =>
 {
-
+    const auth = useAuth();
     const navigate = useNavigate();
     const { register, handleSubmit, formState : { errors } } = useForm<LoginUserFormData>({resolver: zodResolver(loginUserFormSchema)});
 
     const onSubmit = (data : LoginUserFormData) => 
     {
-
-        makeLogin(data)
-            .then(response =>
+        auth.authenticate(data)
+            .then(() =>
             {
-                saveSessionData(response.data)
-                navigate(0)
+                navigate('/sweepstakes');
             })
-            .catch((error) => { console.log(error); })
     }
 
     return(
 
         <>
-
             <Header />
 
             <AuthFormLayout isLogin={true} onSubmit={handleSubmit(onSubmit)}> 

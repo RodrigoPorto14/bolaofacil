@@ -20,7 +20,17 @@ public class UserService implements UserDetailsService{
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
+	private AuthService authService;
+	
+	@Autowired
 	UserRepository userRep;
+	
+	@Transactional(readOnly = true)
+	public UserDTO findAuthenticated() 
+	{
+		User user = authService.authenticated();
+		return new UserDTO(user);
+	}
 	
 	@Transactional
 	public UserDTO insert(UserInsertDTO dto) {
@@ -38,5 +48,7 @@ public class UserService implements UserDetailsService{
 		if(user == null) throw new UsernameNotFoundException("Email not found"); 
 		return user;
 	}
+
+	
 	
 }

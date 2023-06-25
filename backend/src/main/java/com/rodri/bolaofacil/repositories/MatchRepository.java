@@ -19,4 +19,9 @@ public interface MatchRepository extends JpaRepository<Match,Long>{
 		 + "WHERE m.sweepstake = :sweepstake "
 		 + "ORDER BY m.startMoment")
 	List<Match> findAllBySweepstakeOrderByStartMoment(Sweepstake sweepstake);	
+	
+	@Query("SELECT COUNT(m) "
+		 + "FROM Match m "
+		 + "WHERE m.sweepstake = :sweepstake AND m.startMoment < CURRENT_TIMESTAMP")
+	Integer matchesBeforeNowBySweepstake(Sweepstake sweepstake);
 }

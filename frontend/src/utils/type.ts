@@ -48,9 +48,32 @@ export type Match =
     awayTeamId: number;
     homeTeamScore: number;
     awayTeamScore: number;
+
 }
 
 export type Resource = Sweepstake | Rule | Team | Match ;
+
+export type BetMatch = 
+{
+    id : number;
+    type: string;
+    startMoment: string;
+    homeTeam : Team;
+    awayTeam : Team;
+    homeTeamScore: number;
+    awayTeamScore: number;
+}
+
+export type Bet =
+{
+    id : number;
+    match : BetMatch;
+    homeTeamScore: number | null;
+    awayTeamScore: number | null;
+    originalHomeTeamScore : number | null;
+    originalAwayTeamScore : number | null;
+    error : boolean;
+}
 
 export type FormProps =
 {

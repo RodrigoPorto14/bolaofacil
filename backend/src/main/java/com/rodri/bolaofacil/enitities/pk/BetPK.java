@@ -24,7 +24,7 @@ public class BetPK implements Serializable {
 	@JoinColumn(name = "sweepstake_id")
 	private Sweepstake sweepstake;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "match_id")
 	private Match match;
 	

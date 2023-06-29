@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpLong, faBan, faDownLong } from '@fortawesome/free-solid-svg-icons'
+import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 
 type ParticipantSample = 
 {
@@ -22,6 +23,7 @@ const ShowParticipant = () =>
     const { sweepstakeId } = useParams();
     const [participants, setParticipants] = useState<ParticipantSample[]>([]);
     const navigate = useNavigate();
+    const participant = useParticipant();
 
     const baseUrl = `/boloes/${sweepstakeId}/participantes`
 
@@ -68,7 +70,7 @@ const ShowParticipant = () =>
         <>
             <Header status='logged' />
 
-            <MenuLayout navItems={configItems(sweepstakeId)}>
+            <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
 
                 <OverflowContainer>
                 {

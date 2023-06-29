@@ -7,44 +7,21 @@ import { useParams } from 'react-router-dom'
 import { ChangeEvent } from 'react'
 import Button from './button'
 import { isPastDate, toBrDate } from '../utils/date-handler'
-import { matchValidation, nullScore, equalScore, invalidScore } from '../utils/match-validation'
+import { notChangeBet, invalidBet } from '../utils/match-validation'
 
-const Bets = () =>
+type BetsProps =
+{
+    bets : Bet[];
+    pageNumber : number;
+    lastPage : boolean;
+    setBets : (bets : Bet[]) => void
+    getMatcheswithBets : (page? : number) => void
+}
+
+const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsProps) =>
 {
 
-    const [bets, setBets] = useState<Bet[]>([]);
-    const [pageNumber, setPageNumber] = useState(0);
-    const [lastPage, setLastPage] = useState(true);
-    const { sweepstakeId } = useParams();
-
-    useEffect(() =>
-    {
-        getMatcheswithBets();
-
-    },[])
-
-    const getMatcheswithBets = (page? : number) =>
-    {
-        const params = page !== undefined ? { page } : {};
-
-        makePrivateRequest({ url: `/boloes/${sweepstakeId}/bets`, params})
-            .then(response =>
-            {
-                const fetchedBets = response.data.content.map((bet: Bet) => 
-                ({
-                    ...bet,
-                    originalHomeTeamScore: bet.homeTeamScore,
-                    originalAwayTeamScore: bet.awayTeamScore,
-                    error: false
-                }));
-                
-                setPageNumber(response.data.pageable.pageNumber);
-                setLastPage(response.data.last);
-                setBets(fetchedBets);
-            })
-            .catch(error => console.log(error))
-
-    }
+    const {sweepstakeId} = useParams();
 
     const sendBets = (bet : Bet, method : string) =>
     {
@@ -62,10 +39,10 @@ const Bets = () =>
         const updatedValues = [...bets];
         for(const bet of updatedValues)
         {
-            if(equalScore(bet))
+            if(notChangeBet(bet))
                 continue;
             
-            if(nullScore(bet) || invalidScore(bet) || !matchValidation(bet.homeTeamScore as number, bet.awayTeamScore as number, bet.match.type))
+            if(invalidBet(bet))
             {
                 bet.error = true;
                 continue;
@@ -149,7 +126,7 @@ const Bets = () =>
 
                             {betStatus(bet)}
 
-                            <p> {toBrDate(bet.match.startMoment)} </p>
+                            <div> {toBrDate(bet.match.startMoment)} </div>
 
                             <div className="flex w-full items-center gap-3">
 
@@ -208,7 +185,6 @@ const Bets = () =>
                 <Button onClick={onSaveBets}>  SALVAR PALPITES </Button>
             </div>
             
-
         </div>
     )
 }

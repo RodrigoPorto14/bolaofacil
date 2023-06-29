@@ -7,6 +7,7 @@ import { makePrivateRequest } from "../utils/request"
 import MenuItem from "../components/menu-item"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 
 type RequestSample = 
 {
@@ -20,6 +21,7 @@ const ShowRequest = () =>
     const { sweepstakeId } = useParams();
     const [requests, setRequests] = useState<RequestSample[]>([]);
     const navigate = useNavigate();
+    const participant = useParticipant();
 
     const baseUrl = `/boloes/${sweepstakeId}/`
 
@@ -59,7 +61,7 @@ const ShowRequest = () =>
         <>
             <Header status='logged' />
 
-            <MenuLayout navItems={configItems(sweepstakeId)}>
+            <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
 
                 <div className="flex flex-col gap-2 overflow-y-auto">
                 {

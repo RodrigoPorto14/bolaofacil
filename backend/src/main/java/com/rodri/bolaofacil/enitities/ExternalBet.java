@@ -7,27 +7,27 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.rodri.bolaofacil.enitities.pk.BetPK;
+import com.rodri.bolaofacil.enitities.pk.ExternalBetPK;
 
 @Entity
-@Table(name = "tb_bet")
-public class Bet implements Serializable {
+@Table(name = "tb_external_bet")
+public class ExternalBet implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@EmbeddedId
-	private BetPK id;
+	private ExternalBetPK id;
 	
 	private Integer homeTeamScore;
 	private Integer awayTeamScore;
 	
-	public Bet() {}
+	public ExternalBet() {}
 
-	public Bet(User user, Sweepstake sweepstake, Match match, Integer homeTeamScore, Integer awayTeamScore) 
+	public ExternalBet(User user, Sweepstake sweepstake, Long externalMatchId, Integer homeTeamScore, Integer awayTeamScore) 
 	{
-		id = new BetPK();
+		id = new ExternalBetPK();
 		id.setUser(user);
 		id.setSweepstake(sweepstake);
-		id.setMatch(match);
+		id.setExternalMatchId(externalMatchId);
 		this.homeTeamScore = homeTeamScore;
 		this.awayTeamScore = awayTeamScore;
 	}
@@ -40,9 +40,9 @@ public class Bet implements Serializable {
 	
 	public void setSweepStake(Sweepstake sweepstake) { id.setSweepstake(sweepstake); }
 	
-	public Match getMatch() { return id.getMatch(); }
+	public Long getExternalMatchId() { return id.getExternalMatchId(); }
 	
-	public void setMatch(Match match) { id.setMatch(match); }
+	public void setExternalMatchId(Long externalMatchId) { id.setExternalMatchId(externalMatchId); }
 
 	public Integer getHomeTeamScore() {
 		return homeTeamScore;
@@ -73,7 +73,7 @@ public class Bet implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Bet other = (Bet) obj;
+		ExternalBet other = (ExternalBet) obj;
 		return Objects.equals(id, other.id);
 	}
 }

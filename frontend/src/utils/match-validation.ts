@@ -8,6 +8,9 @@ const validBestOf = (bestOf : number, scoreA : number, scoreB : number) =>
     
 export const matchValidation = (homeTeamScore : number, awayTeamScore : number, matchType : string) => 
 {
+    if(nullScore(homeTeamScore, awayTeamScore) || undefinedScore(homeTeamScore, awayTeamScore))
+        return true;
+
     if((homeTeamScore === null) !== (awayTeamScore === null))
         return false
 
@@ -20,14 +23,23 @@ export const matchValidation = (homeTeamScore : number, awayTeamScore : number, 
     return true
 }
 
-export const nullScore = (bet : Bet) => 
-    bet.homeTeamScore === null && bet.awayTeamScore === null;
+const undefinedScore = (homeScore : number|undefined, awayScore : number|undefined) =>
+    homeScore === undefined && awayScore === undefined;
 
-export const equalScore = (bet : Bet) => 
+const nullScore = (homeScore : number|null, awayScore : number|null) => 
+    homeScore === null && awayScore === null;
+
+const invalidScore = (bet : Bet) =>
+bet.homeTeamScore as number < 0 || bet.homeTeamScore as number > 99 || 
+bet.awayTeamScore as number < 0 || bet.awayTeamScore as number > 99
+
+export const notChangeBet = (bet : Bet) => 
     bet.homeTeamScore === bet.originalHomeTeamScore && bet.awayTeamScore === bet.originalAwayTeamScore
 
-export const invalidScore = (bet : Bet) =>
-    bet.homeTeamScore as number < 0 || bet.homeTeamScore as number > 99 || 
-    bet.awayTeamScore as number < 0 || bet.awayTeamScore as number > 99
+export const invalidBet = (bet : Bet) =>
+    nullScore(bet.homeTeamScore, bet.awayTeamScore) ||
+    invalidScore(bet) ||
+    !matchValidation(bet.homeTeamScore as number, bet.awayTeamScore as number, bet.match.type)
+
 
     

@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
 import MenuItem from "../components/menu-item"
 import { ResourceProps, ResourceSample } from "../utils/type"
+import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 
 const ShowResource = ({ resource } : ResourceProps) =>
 {
@@ -15,12 +16,13 @@ const ShowResource = ({ resource } : ResourceProps) =>
     const { sweepstakeId } = useParams();
     const [resources, setResources] = useState<ResourceSample[]>([]);
     const location = useLocation()
+    const participant = useParticipant()
 
     const buttonName = isSweepstake ? "NOVO BOLÃO" : `ADICIONAR ${resource.slice(0,-1).toUpperCase()}`
 
     const url = isSweepstake ? "/boloes" : `/boloes/${sweepstakeId}/${resource}`
 
-    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId);
+    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId, participant.role, participant.tournament);
 
     useEffect(() =>
     {

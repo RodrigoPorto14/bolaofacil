@@ -4,19 +4,30 @@ export const menuItems =
     {title: 'Buscar Bolão', redirect: '/search'}
 ]
 
-export const configItems = (sweepstakeId : string | undefined) => 
+export const configItems = (sweepstakeId? : string, role? : string, tournament? : string) => 
 {
     
     const basePath = `/sweepstakes/${sweepstakeId}/config`;
-    const items = 
-    [
-        {title: 'Bolão', redirect: basePath+'/sweepstake'},
-        {title: 'Regras', redirect: basePath+'/rules'},
-        {title: 'Times', redirect: basePath+'/teams'},
-        {title: 'Partidas', redirect: basePath+'/matches'},
-        {title: 'Participantes', redirect: basePath+'/participants'},
-        {title: 'Solicitações', redirect: basePath+'/requests'}
-    ]
+    const isOwner = role === "OWNER";
+    const isOwnerOrAdmin = isOwner || role === "ADMIN";
+    const isCustom = tournament === "CUSTOM"
+    const items = []
+
+    if(isOwner)
+        items.push({title: 'Bolão', redirect: basePath+'/sweepstake'})
+
+    if(isCustom && isOwnerOrAdmin)
+    {
+        items.push({title: 'Regras', redirect: basePath+'/rules'});
+        items.push({title: 'Times', redirect: basePath+'/teams'});
+        items.push({title: 'Partidas', redirect: basePath+'/matches'});
+    }
+    
+    if(isOwner)
+        items.push({title: 'Participantes', redirect: basePath+'/participants'})
+
+    if(isOwnerOrAdmin)
+        items.push({title: 'Solicitações', redirect: basePath+'/requests'});
 
     return items
 }

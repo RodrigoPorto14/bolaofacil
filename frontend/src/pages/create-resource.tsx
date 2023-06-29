@@ -10,6 +10,7 @@ import { menuItems, configItems } from "../utils/nav-items";
 import uploadTeamImage from "../utils/upload-request";
 import SweepstakeForm from "../components/sweepstake-form";
 import { previousPath } from "../utils/path-handler";
+import { useParticipant } from "../context/ParticipantProvider/useParticipant";
 
 const CreateResource = ( { resource } : ResourceProps) =>
 {
@@ -17,9 +18,10 @@ const CreateResource = ( { resource } : ResourceProps) =>
     const { sweepstakeId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+    const participant = useParticipant();
 
     const url = isSweepstake ? '/boloes' : `/boloes/${sweepstakeId}/${resource}`;
-    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId);
+    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId, participant.role, participant.tournament);
     const buttonName = isSweepstake ? "CRIAR" : "ADICIONAR";
 
     const uploadAndSubmit = (data : any) =>

@@ -75,6 +75,17 @@ export type Bet =
     error : boolean;
 }
 
+export type RankingHeader = 
+{
+    name: string,
+    exactScore : number;
+	winnerScore : number;
+	scoreDifference : number;
+	loserScore : number;
+	winner : number;
+    points : number;
+}
+
 export type FormProps =
 {
     onSubmit : any;

@@ -15,6 +15,11 @@ public class TeamDTO extends TeamSampleDTO {
 		imgUri = entity.getImgUri();
 	}
 
+	public TeamDTO(Long id, String name, String imgUri) {
+		super(id, name);
+		this.imgUri = imgUri;
+	}
+
 	public String getImgUri() {
 		return imgUri;
 	}

@@ -1,33 +1,12 @@
-import { useEffect, useState } from "react";
-import { makePrivateRequest } from "../utils/request";
-import { useParams } from "react-router-dom";
+import { RankingHeader } from "../utils/type";
 
-type RankingHeader = 
+type RankingProps = 
 {
-    name: string,
-    exactScore : number;
-	winnerScore : number;
-	scoreDifference : number;
-	loserScore : number;
-	winner : number;
-    points : number;
+    ranking : RankingHeader[];
 }
 
-const Ranking = () =>
+const Ranking = ({ ranking } : RankingProps) =>
 {
-
-    const { sweepstakeId } = useParams();
-    const [ranking, setRanking] = useState<RankingHeader[]>([]);
-
-    useEffect(() =>
-    {
-        makePrivateRequest({ url: `/boloes/${sweepstakeId}/ranking`})
-            .then(response =>
-            {
-                setRanking(response.data)
-            })
-            .catch(error => console.log(error))
-    },[sweepstakeId])
 
     const border = "border-2 border-black h-4";
     const headerCellClass = `w-12 ${border}`

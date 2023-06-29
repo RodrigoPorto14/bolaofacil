@@ -3,6 +3,7 @@ package com.rodri.bolaofacil.dto;
 import java.io.Serializable;
 
 import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.enitities.enums.Tournament;
 
 public class SweepstakeDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,6 +11,7 @@ public class SweepstakeDTO implements Serializable {
 	private Long id;
 	private String name;
 	private boolean private_;
+	private Tournament tournament;
 	private String ownerName;
 	
 	public SweepstakeDTO() {}
@@ -27,6 +29,7 @@ public class SweepstakeDTO implements Serializable {
 		id = entity.getId();
 		name = entity.getName();
 		private_ = entity.isPrivate();
+		tournament = entity.getTournament();
 	}
 
 	public Long getId() {
@@ -41,6 +44,10 @@ public class SweepstakeDTO implements Serializable {
 		return private_;
 	}
 	
+	public Tournament getTournament() {
+		return tournament;
+	}
+
 	public String getOwnerName() {
 		return ownerName;
 	}

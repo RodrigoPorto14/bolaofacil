@@ -2,13 +2,15 @@ INSERT INTO tb_user (email, nickname, password) VALUES ('rodrigo@gmail.com', 'Ro
 INSERT INTO tb_user (email, nickname, password) VALUES ('xablau@gmail.com', 'Xablau', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G');
 INSERT INTO tb_user (email, nickname, password) VALUES ('junin@gmail.com', 'Junin', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G');
 
-INSERT INTO tb_sweepstake (name, is_private) VALUES ('Carioca 2023', false);
-INSERT INTO tb_sweepstake (name, is_private) VALUES ('Paulistão 2023', false);
+INSERT INTO tb_sweepstake (name, is_private, tournament) VALUES ('Carioca 2023', false, 0);
+INSERT INTO tb_sweepstake (name, is_private, tournament) VALUES ('CBLOL 2023', false, 1);
+INSERT INTO tb_sweepstake (name, is_private, tournament) VALUES ('Paulistão 2023', false, 0);
 
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (1, 1, 2, TIMESTAMP WITH TIME ZONE '2023-01-10T16:00:00Z');
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (2, 1, 0, TIMESTAMP WITH TIME ZONE '2023-01-10T12:00:00Z');
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (3, 1, 0, TIMESTAMP WITH TIME ZONE '2023-01-10T16:00:00Z');
-INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (2, 2, 2, TIMESTAMP WITH TIME ZONE '2023-01-10T12:00:00Z');
+INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (1, 2, 2, TIMESTAMP WITH TIME ZONE '2023-01-10T16:00:00Z');
+INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (2, 3, 2, TIMESTAMP WITH TIME ZONE '2023-01-10T12:00:00Z');
 
 INSERT INTO tb_rule (sweepstake_id, name, exact_score, winner_score, score_difference, loser_score, winner) VALUES (1,'Fase de Grupos', 25, 18, 15, 12, 10);
 INSERT INTO tb_rule (sweepstake_id, name, exact_score, winner_score, score_difference, loser_score, winner) VALUES (1,'Eliminatórias', 25, 18, 15, 12, 10);

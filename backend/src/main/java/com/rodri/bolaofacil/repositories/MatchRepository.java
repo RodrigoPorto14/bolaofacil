@@ -16,6 +16,7 @@ public interface MatchRepository extends JpaRepository<Match,Long>{
 		 + "FROM Match m "
 		 + "JOIN FETCH m.homeTeam "
 		 + "JOIN FETCH m.awayTeam "
+		 + "JOIN FETCH m.rule "
 		 + "WHERE m.sweepstake = :sweepstake "
 		 + "ORDER BY m.startMoment")
 	List<Match> findAllBySweepstakeOrderByStartMoment(Sweepstake sweepstake);	

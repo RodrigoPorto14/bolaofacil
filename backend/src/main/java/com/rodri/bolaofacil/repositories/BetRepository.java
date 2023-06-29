@@ -26,8 +26,6 @@ public interface BetRepository extends JpaRepository<Bet,BetPK>{
 	
 	@Query("SELECT b "
 		 + "FROM Bet b "
-		 + "JOIN FETCH b.id.match m "
-		 + "JOIN FETCH m.rule "
 		 + "WHERE b.id.sweepstake = :sweepstake "
 		 + "ORDER BY b.id.user.id ")
 	List<Bet> findAllBySweepstake(Sweepstake sweepstake);

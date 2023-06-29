@@ -1,8 +1,7 @@
 package com.rodri.bolaofacil.enitities.enums;
 
-public enum BetStatus {
+public enum Tournament {
 	
-	EMPTY,
-	CHANGED,
-	SAVED
+	CUSTOM,
+	CBLOL
 }

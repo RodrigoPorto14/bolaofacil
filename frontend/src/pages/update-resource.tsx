@@ -11,6 +11,7 @@ import { previousPath } from "../utils/path-handler";
 import { ResourceProps, Resource, Team } from "../utils/type";
 import uploadTeamImage from "../utils/upload-request";
 import SweepstakeForm from "../components/sweepstake-form";
+import { useParticipant } from "../context/ParticipantProvider/useParticipant";
 
 const UpdateResource = ({ resource } : ResourceProps) =>
 {
@@ -20,6 +21,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
     const navigate = useNavigate();
     const location = useLocation();
     const buttonName = "ATUALIZAR";
+    const participant = useParticipant();
 
     const url = isSweepstake ? `/boloes/${sweepstakeId}` : `/boloes/${sweepstakeId}/${resource}/${resourceId}`;
 
@@ -71,7 +73,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
         <>
             <Header status="logged" />
 
-            <MenuLayout navItems={configItems(sweepstakeId)}>
+            <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
 
             { 
                 resource === 'sweepstakes' ? ( <SweepstakeForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) : 

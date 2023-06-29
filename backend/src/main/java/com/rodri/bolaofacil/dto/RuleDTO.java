@@ -24,6 +24,15 @@ public class RuleDTO extends RuleSampleDTO {
 		winner = entity.getWinner();
 		
 	}
+	
+	public RuleDTO(Integer exactScore, Integer winnerScore, Integer scoreDifference, Integer loserScore, Integer winner) 
+	{
+		this.exactScore = exactScore;
+		this.winnerScore = winnerScore;
+		this.scoreDifference = scoreDifference;
+		this.loserScore = loserScore;
+		this.winner = winner;
+	}
 
 	public Integer getExactScore() {
 		return exactScore;

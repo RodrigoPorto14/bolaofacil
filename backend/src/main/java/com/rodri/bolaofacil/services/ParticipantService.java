@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rodri.bolaofacil.dto.ParticipantDTO;
 import com.rodri.bolaofacil.dto.ParticipantSampleDTO;
 import com.rodri.bolaofacil.dto.ParticipantUpdateDTO;
 import com.rodri.bolaofacil.enitities.Participant;
@@ -39,6 +40,20 @@ public class ParticipantService {
 	
 	@Autowired
 	AuthService authService;
+	
+	@Transactional(readOnly=true)
+	public ParticipantDTO findById(Long sweepstakeId, Long userId)
+	{
+		try
+		{
+			User user = userRep.getReferenceById(userId);
+			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
+			ParticipantPK id = new ParticipantPK(user,sweepstake);
+			Participant participant = participantRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+			return new ParticipantDTO(participant);
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found"); }
+	}
 	
 	@Transactional(readOnly=true)
 	public List<ParticipantSampleDTO> findAllBySweepstake(Long sweepstakeId)
@@ -113,6 +128,8 @@ public class ParticipantService {
 		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException("Id not found " +id);}
 		catch(DataIntegrityViolationException e) {throw new DataBaseException("Integrity violation");}
 	}
+
+	
 
 	
 

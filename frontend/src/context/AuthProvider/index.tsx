@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState, useEffect } from "react";
 import { LoginData, makeLogin, makePrivateRequest } from "../../utils/request";
 import { IContext, IUser } from "./types";
-import { saveToken, removeToken, isAuthenticated } from "./auth";
+import { saveToken, removeToken } from "./auth";
 
 const AuthContext = createContext<IContext>({} as IContext);
 
@@ -13,35 +13,31 @@ const AuthProvider = ({ children } : {children : ReactNode}) =>
 
     useEffect(() =>
     {
-        const authenticated = isAuthenticated();
-        setUserAuthenticated(authenticated)
-
-        if(authenticated)
-            makePrivateRequest({url : '/users'})
-                .then(response =>
-                {
-                    setUser(response.data);
-                    setLoading(false);
-                })
-                .catch(error => console.log(error))
-        
-        else 
-            setLoading(false);
+        //const authenticated = isAuthenticated();
+        console.log("AAAAA")
+        makePrivateRequest({url : '/users'})
+            .then(response =>
+            {
+                setUserAuthenticated(true)
+                setUser(response.data);
+                setLoading(false);
+            })
+            .catch(() => { setLoading(false); })
 
     },[])
 
     const authenticate =  async (loginData : LoginData) => 
     {
         await makeLogin(loginData)
-            .then(response =>
-            {  
-                const data = response.data;
-                saveToken(data.access_token);
-                setUserAuthenticated(true)
-                setUser({id : data.userId, nickname: data.userNickname, email: data.userEmail});
-                setLoading(false);
-            })
-            .catch(error => console.log(error))
+                .then(response =>
+                {  
+                    const data = response.data;
+                    saveToken(data.access_token);
+                    setUserAuthenticated(true)
+                    setUser({id : data.userId, nickname: data.userNickname, email: data.userEmail});
+                    setLoading(false);
+                })
+                .catch(error => console.log(error))
     }
 
     const logout = () =>

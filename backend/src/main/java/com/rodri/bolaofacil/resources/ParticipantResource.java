@@ -15,24 +15,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rodri.bolaofacil.dto.ParticipantDTO;
 import com.rodri.bolaofacil.dto.ParticipantSampleDTO;
 import com.rodri.bolaofacil.dto.ParticipantUpdateDTO;
 import com.rodri.bolaofacil.services.ParticipantService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}")
+@RequestMapping(value = "/boloes/{sweepstakeId}/participantes")
 public class ParticipantResource {
 	
 	@Autowired
 	ParticipantService service;
 	
-	@GetMapping(value = "/participantes")
+	
+	@GetMapping(value = "/{userId}")
+	public ResponseEntity<ParticipantDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long userId)
+	{
+		return ResponseEntity.ok().body(service.findById(sweepstakeId, userId));
+	}
+	
+	@GetMapping()
 	public ResponseEntity<List<ParticipantSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping(value = "/participantes")
+	@PostMapping()
 	public ResponseEntity<ParticipantSampleDTO> insertAuthenticated(@PathVariable Long sweepstakeId)
 	{
 		ParticipantSampleDTO dto = service.insertAuthenticated(sweepstakeId);
@@ -40,7 +48,7 @@ public class ParticipantResource {
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PostMapping(value = "/participantes/{userId}")
+	@PostMapping(value = "/{userId}")
 	public ResponseEntity<ParticipantSampleDTO> insertAuthenticated(@PathVariable Long sweepstakeId, @PathVariable Long userId)
 	{
 		ParticipantSampleDTO dto = service.insert(sweepstakeId, userId);
@@ -48,13 +56,13 @@ public class ParticipantResource {
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/participantes/{id}")
+	@PutMapping(value = "/{id}")
 	public ResponseEntity<ParticipantSampleDTO> update(@PathVariable Long sweepstakeId, @PathVariable Long id, @RequestBody ParticipantUpdateDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
 	}
 	
-	@DeleteMapping(value="/participantes/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
 	{
 		service.delete(sweepstakeId,id);

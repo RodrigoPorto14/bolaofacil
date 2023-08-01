@@ -19,6 +19,9 @@ public class UserDTO implements Serializable {
 	@NotBlank(message = "Campo obrigatório")
 	private String nickname;
 	
+	private String token;
+	private boolean active;
+	
 	public UserDTO() {}
 	
 	public UserDTO(User entity)
@@ -26,6 +29,8 @@ public class UserDTO implements Serializable {
 		id = entity.getId();
 		email = entity.getEmail();
 		nickname = entity.getNickname();
+		token = entity.getToken();
+		active = entity.isActive();
 	}
 	
 	public Long getId() {
@@ -38,6 +43,14 @@ public class UserDTO implements Serializable {
 	
 	public String getNickname() {
 		return nickname;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public boolean isActive() {
+		return active;
 	}
 	
 }

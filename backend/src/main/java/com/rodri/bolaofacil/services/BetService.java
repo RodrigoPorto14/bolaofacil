@@ -45,7 +45,7 @@ public class BetService {
 		Participant participant = authService.validateParticipant(sweepstakeId);
 		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		
-		if(sweepstake.getTournament() == Tournament.CUSTOM)
+		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
 		{
 			try
 			{
@@ -71,7 +71,7 @@ public class BetService {
 		Participant participant = authService.validateParticipant(sweepstakeId);
 		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 
-		if(sweepstake.getTournament() == Tournament.CUSTOM)
+		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
 		{
 			try
 			{

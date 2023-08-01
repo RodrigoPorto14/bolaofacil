@@ -3,16 +3,6 @@ import jwtDecode from 'jwt-decode';
 export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'bolaofacil';
 export const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? '140301ro';
 
-type LoginResponse = 
-{
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-  nickName: string;
-  userId: number;
-}
-
 type AccessToken = 
 {
   exp: number;
@@ -53,7 +43,6 @@ export const getAccessTokenDecoded = (token : string) =>
   try 
   {
     const tokenDecoded = jwtDecode(token);
-    console.log(tokenDecoded)
     return tokenDecoded as AccessToken;
   } 
   catch (error)

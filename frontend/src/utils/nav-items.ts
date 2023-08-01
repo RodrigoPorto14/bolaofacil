@@ -7,14 +7,14 @@ export const menuItems =
 export const configItems = (sweepstakeId? : string, role? : string, tournament? : string) => 
 {
     
-    const basePath = `/sweepstakes/${sweepstakeId}/config`;
+    const basePath = `/sweepstakes/${sweepstakeId}`;
     const isOwner = role === "OWNER";
     const isOwnerOrAdmin = isOwner || role === "ADMIN";
-    const isCustom = tournament === "CUSTOM"
+    const isCustom = tournament === "PERSONALIZADO"
     const items = []
 
     if(isOwner)
-        items.push({title: 'Bolão', redirect: basePath+'/sweepstake'})
+        items.push({title: 'Bolão', redirect: basePath+'/info'})
 
     if(isCustom && isOwnerOrAdmin)
     {

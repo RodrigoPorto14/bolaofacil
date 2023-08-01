@@ -1,4 +1,4 @@
-import { RankingHeader } from "../utils/type";
+import { RankingHeader } from "../../utils/type";
 
 type RankingProps = 
 {

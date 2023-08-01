@@ -16,6 +16,7 @@ export type Sweepstake =
 {
     id : number;
     name : string;
+    tournament : string;
     private_ : boolean;
     ownerName : string;
 }
@@ -94,6 +95,5 @@ export type FormProps =
     create? : boolean;
     resource? : Resource;
     children?: ReactNode;
-    gap? : string;
 }
 

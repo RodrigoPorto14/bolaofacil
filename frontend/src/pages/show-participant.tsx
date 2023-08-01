@@ -1,9 +1,10 @@
-import Header from "../components/header"
-import MenuLayout from "../components/menu-layout"
-import MenuItem from "../components/menu-item"
-import OverflowContainer from "../components/overflow-container"
+import Header from "../components/header/header"
+import MenuLayout from "../components/menu/menu-layout"
+import MenuItem from "../components/menu/menu-item"
+import OverflowContainer from "../components/menu/overflow-container"
+import BackButton from "../components/buttons/button-back"
 import { configItems } from "../utils/nav-items"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,15 +20,19 @@ type ParticipantSample =
 
 const ShowParticipant = () =>
 {
-
     const { sweepstakeId } = useParams();
     const [participants, setParticipants] = useState<ParticipantSample[]>([]);
-    const navigate = useNavigate();
     const participant = useParticipant();
 
     const baseUrl = `/boloes/${sweepstakeId}/participantes`
 
     useEffect(() =>
+    {
+        fetchParticipants();
+
+    },[])
+
+    const fetchParticipants = () =>
     {
         makePrivateRequest( {url: baseUrl } )
             .then((response) =>
@@ -35,8 +40,7 @@ const ShowParticipant = () =>
                 setParticipants(response.data)
             })
             .catch((error) => console.log(error))
-
-    },[baseUrl])
+    }
 
     const onChangeRole = (participant : ParticipantSample, newRole : string) =>
     {
@@ -44,7 +48,7 @@ const ShowParticipant = () =>
         makePrivateRequest({url: baseUrl+'/'+participant.userId, data,  method: 'PUT'})
             .then(response =>
             {
-                navigate(0)
+                fetchParticipants();
             })
             .catch(error => console.log(error))
     }
@@ -54,7 +58,7 @@ const ShowParticipant = () =>
         makePrivateRequest({url: baseUrl+'/'+participantId,  method: 'DELETE'})
             .then(response =>
             {
-                navigate(0)
+                fetchParticipants();
             })
             .catch(error => console.log(error))
     }
@@ -86,7 +90,9 @@ const ShowParticipant = () =>
                                     <FontAwesomeIcon 
                                         className="text-xl hover:text-brand-200 hover:cursor-pointer" 
                                         icon={faUpLong}
-                                        onClick={() => onChangeRole(participant,"ADMIN")} 
+                                        onClick={() => onChangeRole(participant,"ADMIN")}
+                                        data-tooltip-id="tooltip" 
+                                        data-tooltip-content="Promover" 
                                     />
                                 }
                                 
@@ -96,6 +102,8 @@ const ShowParticipant = () =>
                                         className="text-xl hover:text-red-500 hover:cursor-pointer" 
                                         icon={faDownLong}
                                         onClick={() => onChangeRole(participant,"PLAYER")}
+                                        data-tooltip-id="tooltip" 
+                                        data-tooltip-content="Rebaixar"
                                     />
                                 }
                                 
@@ -103,6 +111,8 @@ const ShowParticipant = () =>
                                     onClick={() => onDelete(participant.userId)}
                                     className="text-xl hover:text-red-500 hover:cursor-pointer" 
                                     icon={faBan}
+                                    data-tooltip-id="tooltip" 
+                                    data-tooltip-content="Expulsar"
                                 />
 
                                 <p className={`font-bold ${roleColor.get(participant.role)}`}>{participant.role}</p>
@@ -113,6 +123,11 @@ const ShowParticipant = () =>
                     ))
                 }
                 </OverflowContainer>
+
+                <div className="mx-auto">
+                    <BackButton />
+                </div>
+                
 
             </MenuLayout>
         </>

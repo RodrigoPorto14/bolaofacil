@@ -1,11 +1,12 @@
-import Header from '../components/header'
-import Input from '../components/input';
-import AuthFormLayout from '../components/auth-form-layout'
+import Header from '../components/header/header'
+import Input from '../components/inputs/input';
+import AuthFormLayout from '../components/auth/auth-form-layout'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider/useAuth';
+import { useState } from 'react';
 
 const loginUserFormSchema = z.object(
 {
@@ -24,14 +25,18 @@ const Login = () =>
     const auth = useAuth();
     const navigate = useNavigate();
     const { register, handleSubmit, formState : { errors } } = useForm<LoginUserFormData>({resolver: zodResolver(loginUserFormSchema)});
+    const [invalidUser, setInvalidUser] = useState(false);
 
     const onSubmit = (data : LoginUserFormData) => 
     {
         auth.authenticate(data)
             .then(() =>
             {
+                setInvalidUser(false);
                 navigate('/sweepstakes');
             })
+            .catch(error => {setInvalidUser(true);} )
+            
     }
 
     return(
@@ -55,6 +60,7 @@ const Login = () =>
                     register={register}
                     name="password"
                     errors={errors}
+                    customError={ invalidUser ? "Usuário ou senha inválidos" : ''}
                 />
 
             </AuthFormLayout>

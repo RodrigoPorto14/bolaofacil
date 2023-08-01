@@ -1,6 +1,6 @@
-import Header from "../components/header";
-import Ranking from "../components/ranking";
-import Bets from "../components/bets";
+import Header from "../components/header/header";
+import Ranking from "../components/sweepstake/ranking";
+import Bets from "../components/sweepstake/bets";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
@@ -68,7 +68,7 @@ const Sweepstake = () =>
 
                     {
                         isOwnerOrAdmin &&
-                        <Link to={`${location.pathname}/config/${isOwner ? 'sweepstake' : 'rules'}`}>
+                        <Link to={`${location.pathname}/${isOwner ? 'info' : 'rules'}`}>
                             <FontAwesomeIcon 
                                 className="text-black text-4xl hover:text-brand-200 hover:cursor-pointer" 
                                 icon={faGear}

@@ -80,6 +80,7 @@ public class SweepstakeService {
 	{
 		entity.setName(dto.getName());
 		entity.setPrivate(dto.getPrivate_());
+		entity.setTournament(dto.getTournament());
 		return entity;
 	}
 }

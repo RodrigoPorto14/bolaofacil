@@ -1,3 +1,5 @@
+import ErrorMessage from "./error-message";
+
 type InputProps<T> = 
 {
     label: string;
@@ -7,9 +9,10 @@ type InputProps<T> =
     errors: any;
     defaultValue?: string;
     width?: string;
+    customError?: string
 };
   
-  function Input<T>({ label, type, register, name, errors, defaultValue, width='w-full' }: InputProps<T>)
+  function Input<T>({ label, type, register, name, errors, defaultValue, width='w-full', customError}: InputProps<T>)
   {
     return (
 
@@ -24,7 +27,10 @@ type InputProps<T> =
           {...register(name)}
         />
         
-        {errors[name] && <span className="px-1 text-sm text-red-600">{errors[name].message}</span>}
+        {
+          customError ? <ErrorMessage> {customError} </ErrorMessage> :
+          errors[name] && <ErrorMessage> {errors[name].message} </ErrorMessage>
+        }
         
       </div>
     );

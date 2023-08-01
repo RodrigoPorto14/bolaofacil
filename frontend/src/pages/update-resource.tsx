@@ -1,17 +1,18 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom"
-import Header from "../components/header";
-import MenuLayout from "../components/menu-layout";
-import RuleForm from "../components/rule-form"
-import TeamForm from "../components/team-form";
-import MatchForm from "../components/match-form";
+import Header from "../components/header/header";
+import MenuLayout from "../components/menu/menu-layout";
+import RuleForm from "../components/forms/rule-form"
+import TeamForm from "../components/forms/team-form";
+import MatchForm from "../components/forms/match-form";
 import { makePrivateRequest } from "../utils/request";
 import { configItems } from "../utils/nav-items";
 import { useState, useEffect } from "react";
 import { previousPath } from "../utils/path-handler";
 import { ResourceProps, Resource, Team } from "../utils/type";
 import uploadTeamImage from "../utils/upload-request";
-import SweepstakeForm from "../components/sweepstake-form";
+import SweepstakeForm from "../components/forms/sweepstake-form";
 import { useParticipant } from "../context/ParticipantProvider/useParticipant";
+import { toast } from 'react-toastify';
 
 const UpdateResource = ({ resource } : ResourceProps) =>
 {
@@ -42,17 +43,21 @@ const UpdateResource = ({ resource } : ResourceProps) =>
         makePrivateRequest( {url , method: 'DELETE'} )
             .then((response) =>
             {
+                toast.success("Deletado com sucesso!");
                 const path = previousPath(location.pathname)
                 navigate(path)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => 
+            {
+                console.log(error);
+                toast.error("Não foi possível deletar!");
+            })
     }
 
-
-    const uploadAndSubmit = (data : any) =>
-    {
-        uploadTeamImage(data, url+"upload", onSubmit, (resourceObj as Team).imgUri)
-    }
+    // const uploadAndSubmit = (data : any) =>
+    // {
+    //     uploadTeamImage(data, url+"upload", onSubmit, (resourceObj as Team).imgUri)
+    // }
 
     const onSubmit = (data : any) => 
     {   
@@ -60,6 +65,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
         makePrivateRequest( {url , data, method: 'PUT'} )
             .then((response) =>
             {
+                toast.success("Atualizado com sucesso!");
                 const path = previousPath(location.pathname)
                 
                 if(!isSweepstake)
@@ -72,13 +78,12 @@ const UpdateResource = ({ resource } : ResourceProps) =>
 
         <>
             <Header status="logged" />
-
             <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
 
             { 
                 resource === 'sweepstakes' ? ( <SweepstakeForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) : 
                 resource === 'regras' ? ( <RuleForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :   
-                resource === 'times' ? ( <TeamForm onSubmit={uploadAndSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :
+                resource === 'times' ? ( <TeamForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :
                 resource === 'partidas' ? ( <MatchForm onSubmit={onSubmit} onDelete={onDelete} buttonName={buttonName} resource={resourceObj} /> ) :
                 <></>
             }

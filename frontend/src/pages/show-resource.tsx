@@ -1,11 +1,11 @@
-import Header from "../components/header"
-import MenuLayout from "../components/menu-layout"
-import MenuItemLayout from "../components/menu-item-layout"
+import Header from "../components/header/header"
+import MenuLayout from "../components/menu/menu-layout"
+import MenuItemLayout from "../components/menu/menu-item-layout"
 import { menuItems, configItems } from "../utils/nav-items"
 import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
-import MenuItem from "../components/menu-item"
+import MenuItem from "../components/menu/menu-item"
 import { ResourceProps, ResourceSample } from "../utils/type"
 import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 
@@ -18,7 +18,7 @@ const ShowResource = ({ resource } : ResourceProps) =>
     const location = useLocation()
     const participant = useParticipant()
 
-    const buttonName = isSweepstake ? "NOVO BOLÃO" : `ADICIONAR ${resource.slice(0,-1).toUpperCase()}`
+    const buttonName = isSweepstake ? "NOVO BOLÃO" : "ADICIONAR";
 
     const url = isSweepstake ? "/boloes" : `/boloes/${sweepstakeId}/${resource}`
 
@@ -42,7 +42,7 @@ const ShowResource = ({ resource } : ResourceProps) =>
 
             <MenuLayout justify="justify-between" navItems={navItems}>
 
-                <MenuItemLayout to={`${location.pathname}/create`} buttonName={buttonName}>
+                <MenuItemLayout to={`${location.pathname}/create`} buttonName={buttonName} isSweepstake={isSweepstake}>
 
                     {
                         resources.map((resource) =>

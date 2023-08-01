@@ -3,16 +3,17 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FormLayout from './form-layout';
 import { useState, useEffect } from 'react';
-import { makePrivateRequest } from '../utils/request';
-import SelectOptions from './select-options';
-import { Match, ResourceSample, FormProps } from '../utils/type';
+import { makePrivateRequest } from '../../utils/request';
+import SelectOptions from '../inputs/select-options';
+import { Match, ResourceSample, FormProps } from '../../utils/type';
 import { useParams } from 'react-router-dom';
-import Input from './input';
-import InputNumber from './input-number';
-import { matchValidation } from '../utils/match-validation';
+import Input from '../inputs/input';
+import InputNumber from '../inputs/input-number';
+import { matchValidation, scorableMatch } from '../../utils/match-validation';
 
 const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormProps) =>
 {
+
     const numberValidation = z.number()
                               .min(0,'Deve ser maior ou igual a 0')
                               .max(99,'Deve ser menor ou igual a 99')
@@ -22,34 +23,44 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
     const matchFormSchema = z.object(
     {
         ruleId : z.string()
+                  .nonempty('Campo Obrigatório')
                   .transform(value => parseInt(value)),
     
-        type : z.string(),
+        type : z.string()
+                .nonempty('Campo Obrigatório'),
     
         startMoment : z.string()
                        .nonempty('Campo obrigatório')
                        .transform(value => value + ':00Z'),
     
         homeTeamId : z.string()
+                      .nonempty('Campo Obrigatório')
                       .transform(value => parseInt(value)),
     
         awayTeamId : z.string()
+                      .nonempty('Campo Obrigatório')
                       .transform(value => parseInt(value)),
         
         homeTeamScore: numberValidation,
     
         awayTeamScore: numberValidation
                                       
-    }).refine(data => data.homeTeamId !== data.awayTeamId, {message: 'Os times devem ser diferentes', path: ['awayTeamId']})
-      .refine(data => matchValidation(data.homeTeamScore as number, data.awayTeamScore as number, data.type), {message: 'Placar Inválido', path: ['awayTeamScore']})
+    }).refine(data => data.homeTeamId !== data.awayTeamId, 
+                      {message: 'Os times devem ser diferentes', path: ['awayTeamId']})
+
+      .refine(data => matchValidation(data.homeTeamScore as number, data.awayTeamScore as number, data.type), 
+                      {message: 'Placar Inválido', path: ['awayTeamScore']})
+
+      .refine(data => scorableMatch(data.homeTeamScore, data.awayTeamScore, data.startMoment),
+                      {message: 'A partida ainda não começou', path: ['startMoment']})
       
         
     type MatchFormData = z.infer<typeof matchFormSchema>
 
     const { sweepstakeId } = useParams();
     const { register, handleSubmit, formState : { errors } } = useForm<MatchFormData>({resolver: zodResolver(matchFormSchema)});
-    const [rules, setRules] = useState<ResourceSample[]>([]);
-    const [teams, setTeams] = useState<ResourceSample[]>([]);
+    const [rules, setRules] = useState<ResourceSample[]>();
+    const [teams, setTeams] = useState<ResourceSample[]>();
     
     const matchTypes : ResourceSample[] =
     [
@@ -120,6 +131,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
                     errors={errors}
                     value="id"
                     defaultValue={(resource as Match)?.homeTeamId}
+                    width='w-52'
                 />
 
                 {
@@ -145,6 +157,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
                     errors={errors}
                     value="id"
                     defaultValue={(resource as Match)?.awayTeamId}
+                    width='w-52'
                 />
 
                 {

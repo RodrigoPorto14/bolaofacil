@@ -1,5 +1,6 @@
 package com.rodri.bolaofacil.services;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class SweepstakeDetailsService {
 		matchRep.findAllBySweepstakeOrderByStartMoment(sweepstake);
 		int SIZE = 5;
 		
-		if(sweepstake.getTournament() == Tournament.CUSTOM)
+		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
 			 return findDetails(participant, sweepstake, page, SIZE);
 		
 		return findExternalDetails(participant, sweepstake, page, SIZE);	 
@@ -70,7 +71,7 @@ public class SweepstakeDetailsService {
 	
 	private SweepstakeDetailsDTO findDetails(Participant participant, Sweepstake sweepstake, Integer page, int size)
 	{
-		if(page==null)
+		if(page == null)
 			page = matchRep.matchesBeforeNowBySweepstake(sweepstake)/size;
 			
 		Pageable pageable = PageRequest.of(page, size);
@@ -86,6 +87,10 @@ public class SweepstakeDetailsService {
 	{
 		User user = participant.getUser();
 		List<MatchDTO> matches = leaguesService.findCBLOLMatches(sweepstake, user, page, size);
+		
+		if(page == null)
+			page = matchesBeforeNow(matches)/size;
+		
 		List<BetDTO> bets = leaguesService.toBetsDTO(matches, sweepstake, user);
 		Page<BetDTO> pagedBets = leaguesService.toPaged(bets, page, size);
 		
@@ -94,6 +99,20 @@ public class SweepstakeDetailsService {
 		List<CompetitorDTO> ranking = generateRanking(bets, sweepstake);
 		
 		return new SweepstakeDetailsDTO(pagedBets, ranking);
+	}
+	
+	private Integer matchesBeforeNow(List<MatchDTO> matches)
+	{
+		Instant now = Instant.now();
+		int matchesBeforeNow = 0;
+
+		for(int i = 0; i < matches.size() ; i++)
+		{
+			if(matches.get(i).getStartMoment().compareTo(now) < 0)
+				matchesBeforeNow++;
+		}
+		
+		return matchesBeforeNow;
 	}
 	
 	private BetDTO externalBetToBetDto(ExternalBet bet, List<MatchDTO> matches)

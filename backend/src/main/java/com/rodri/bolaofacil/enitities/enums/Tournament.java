@@ -2,6 +2,6 @@ package com.rodri.bolaofacil.enitities.enums;
 
 public enum Tournament {
 	
-	CUSTOM,
+	PERSONALIZADO,
 	CBLOL
 }

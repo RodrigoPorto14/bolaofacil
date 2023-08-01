@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FormLayout from './form-layout';
-import Input from "./input";
-import { FormProps, Team } from '../utils/type';
+import Input from "../inputs/input";
+import { FormProps, Team } from '../../utils/type';
 
 const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : FormProps) =>
 {
@@ -13,8 +13,9 @@ const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                 .nonempty('Campo Obrigatório')
                 .max(16, 'Deve conter no máximo 16 caracteres'),
         
-        imgUri: z.instanceof(FileList)
-                    .transform(list => list.item(0))
+        //imgUri: z.instanceof(FileList)
+        //            .transform(list => list.item(0))
+        imgUri: z.string()
     })
     
     type TeamFormData = z.infer<typeof teamFormSchema>
@@ -34,7 +35,16 @@ const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                 defaultValue={(resource as Team)?.name}
             />
 
-            <div className={`flex flex-col`}>
+            <Input<TeamFormData>
+                label="URL Escudo do Time"
+                type="text"
+                name="imgUri"
+                register={register}
+                errors={errors}
+                defaultValue={(resource as Team)?.imgUri}
+            />
+
+            {/* <div className={`flex flex-col`}>
 
                 <label className="px-1">Escudo do Time</label>
 
@@ -46,7 +56,7 @@ const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
 
                 {errors.imgUri && <span className="px-1 text-sm text-red-600">{errors.imgUri.message}</span>}
 
-            </div>
+            </div> */}
             
         </FormLayout>
     )

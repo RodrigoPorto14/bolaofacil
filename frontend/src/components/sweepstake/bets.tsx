@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
-import { Bet } from '../utils/type'
-import { makePrivateRequest } from '../utils/request'
+import { Bet } from '../../utils/type'
+import { makePrivateRequest } from '../../utils/request'
 import { useParams } from 'react-router-dom'
 import { ChangeEvent } from 'react'
-import Button from './button'
-import { isPastDate, toBrDate } from '../utils/date-handler'
-import { notChangeBet, invalidBet } from '../utils/match-validation'
+import MainButton from '../buttons/button-main'
+import { isPastDate, toBrDate } from '../../utils/date-handler'
+import { notChangeBet, invalidBet } from '../../utils/match-validation'
 
 type BetsProps =
 {
@@ -182,7 +182,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
             </div>
 
             <div className="mx-auto">
-                <Button onClick={onSaveBets}>  SALVAR PALPITES </Button>
+                <MainButton onClick={onSaveBets}> SALVAR PALPITES </MainButton>
             </div>
             
         </div>

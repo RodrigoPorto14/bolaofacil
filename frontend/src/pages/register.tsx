@@ -1,11 +1,13 @@
-import Header from '../components/header'
-import Input from '../components/input';
-import AuthFormLayout from '../components/auth-form-layout'
+import Header from '../components/header/header'
+import Input from '../components/inputs/input';
+import AuthFormLayout from '../components/auth/auth-form-layout'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { makeRequest } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const registerUserFormSchema = z.object(
     {
@@ -40,6 +42,8 @@ export type RegisterData =
 const Register = () =>
 {
     const navigate = useNavigate();
+    const [existingEmail, setExistingEmail] = useState(false);
+    const [existingNickname, setExistingNickname] = useState(false);
 
     const onSubmit = (data : RegisterUserFormData) => 
     {  
@@ -47,9 +51,20 @@ const Register = () =>
         makeRequest({ url: '/users', data: registerData, method: 'POST' })
             .then((response) =>
             {
+                toast.success("Cadastro feito com sucesso! Um link será enviado ao seu email para ativação da conta", {autoClose : false});
+                setExistingEmail(false);
+                setExistingNickname(false);
+
+                makeRequest({ url: '/users/send-email', data: response.data, method: 'POST'})
+
                 navigate('/login')
             })
-            .catch((error) => { console.log(error); })
+            .catch((error) => 
+            { 
+                const errorMessage : string = error.response.data.message;
+                setExistingEmail(errorMessage.includes("email"));
+                setExistingNickname(errorMessage.includes("nickname"))
+            })
     }
 
     const { register, handleSubmit, formState : { errors } } = useForm<RegisterUserFormData>({resolver: zodResolver(registerUserFormSchema)});
@@ -67,6 +82,7 @@ const Register = () =>
                     name="nickname"
                     register={register}
                     errors={errors}
+                    customError={existingNickname ? "Apelido já existente" : ''}
                 />
 
                 <Input<RegisterUserFormData>
@@ -75,6 +91,7 @@ const Register = () =>
                     name="email"
                     register={register}
                     errors={errors}
+                    customError={existingEmail ? "Email já cadastrado" : ''}
                 />
 
                 <Input<RegisterUserFormData>

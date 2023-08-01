@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Input from "./input";
-import InputNumber from "./input-number";
+import Input from "../inputs/input";
+import InputNumber from "../inputs/input-number";
 import FormLayout from './form-layout';
-import { Rule, FormProps } from '../utils/type';
+import { Rule, FormProps } from '../../utils/type';
+
 
 
 
@@ -52,6 +53,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.exactScore}
+                    tooltip="Pontos ganhos ao acertar o placar exato"
                 />
 
                 <InputNumber<RuleFormData>
@@ -60,6 +62,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.winnerScore}
+                    tooltip="Pontos ganhos ao acertar o placar do vencedor"
                 />
 
                 <InputNumber<RuleFormData>
@@ -68,6 +71,8 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.scoreDifference}
+                    tooltip="Pontos ganhos ao acertar a diferença entre os placares"
+                    
                 />
 
                 <InputNumber<RuleFormData>
@@ -76,6 +81,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.loserScore}
+                    tooltip="Pontos ganhos ao acertar o vencedor e o placar do perdedor"
                 />
 
                 <InputNumber<RuleFormData>
@@ -84,6 +90,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.winner}
+                    tooltip="Pontos ganhos ao acertar o vencedor da partida"
                 />                                      
                         
             </FormLayout>

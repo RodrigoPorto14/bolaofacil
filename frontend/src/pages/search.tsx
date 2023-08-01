@@ -1,7 +1,7 @@
-import Header from "../components/header"
-import MenuLayout from "../components/menu-layout"
-import MenuItem from "../components/menu-item"
-import OverflowContainer from "../components/overflow-container"
+import Header from "../components/header/header"
+import MenuLayout from "../components/menu/menu-layout"
+import MenuItem from "../components/menu/menu-item"
+import OverflowContainer from "../components/menu/overflow-container"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faLock, faLockOpen, faRightFromBracket, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { menuItems } from "../utils/nav-items"
@@ -9,6 +9,7 @@ import { Sweepstake } from '../utils/type'
 import { useState } from "react"
 import { makePrivateRequest } from "../utils/request"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const Search = () =>
 {
@@ -47,7 +48,6 @@ const Search = () =>
         makePrivateRequest({url: `boloes/${sweepstakeId}/participantes`, method: 'POST'})
             .then(response =>
             {
-                console.log(response.data)
                 navigate('/sweepstakes')
             })
             .catch(error => console.log(error))
@@ -58,7 +58,8 @@ const Search = () =>
         makePrivateRequest({url: `boloes/${sweepstakeId}/requests`, method: 'POST'})
             .then(response =>
             {
-                console.log(response.data)
+                toast.success("Pedido enviado!")
+                handleSendSearch();
             })
             .catch(error => console.log(error))
     }
@@ -100,16 +101,24 @@ const Search = () =>
                                         <p>{`Criado por: ${sweepstake.ownerName}`}</p>
                                         { 
                                             sweepstake.private_ ? 
+
                                             <FontAwesomeIcon 
                                                 className="text-xl hover:text-brand-200 hover:cursor-pointer"
                                                 icon={faEnvelope}
                                                 onClick={() => onRequest(sweepstake.id)}
-                                            /> : 
+                                                data-tooltip-id="tooltip" 
+                                                data-tooltip-content="Pedir para entrar"
+                                            />
+
+                                            : 
+
                                             <FontAwesomeIcon
                                                 className="text-xl hover:text-brand-200 hover:cursor-pointer"
                                                 icon={faRightFromBracket}
                                                 onClick={() => onEnter(sweepstake.id)} 
-                                            /> 
+                                                data-tooltip-id="tooltip" 
+                                                data-tooltip-content="Entrar"
+                                            />                                            
                                         }
 
                                     </div>

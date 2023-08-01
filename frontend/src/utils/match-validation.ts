@@ -1,4 +1,12 @@
 import { Bet } from "./type";
+import { isPastDate } from "./date-handler";
+
+export const scorableMatch = (homeScore : number|null|undefined, awayScore : number|null|undefined, startMoment : string) =>
+{
+    console.log(homeScore, awayScore, startMoment);
+    console.log( new Date(startMoment).getTime() , new Date().getTime())
+    return (homeScore == null && awayScore == null ) || isPastDate(startMoment)
+}
 
 const validBestOf = (bestOf : number, scoreA : number, scoreB : number) => 
 {
@@ -40,6 +48,7 @@ export const invalidBet = (bet : Bet) =>
     nullScore(bet.homeTeamScore, bet.awayTeamScore) ||
     invalidScore(bet) ||
     !matchValidation(bet.homeTeamScore as number, bet.awayTeamScore as number, bet.match.type)
+
 
 
     

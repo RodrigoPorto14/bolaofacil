@@ -1,13 +1,15 @@
-import Header from "../components/header"
-import MenuLayout from "../components/menu-layout"
+import Header from "../components/header/header"
+import MenuLayout from "../components/menu/menu-layout"
 import { configItems } from "../utils/nav-items"
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
-import MenuItem from "../components/menu-item"
+import MenuItem from "../components/menu/menu-item"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useParticipant } from "../context/ParticipantProvider/useParticipant"
+import OverflowContainer from "../components/menu/overflow-container"
+import BackButton from "../components/buttons/button-back"
 
 type RequestSample = 
 {
@@ -63,7 +65,7 @@ const ShowRequest = () =>
 
             <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
 
-                <div className="flex flex-col gap-2 overflow-y-auto">
+                <OverflowContainer>
                 {
                     requests.map((request) =>
                     (
@@ -91,6 +93,10 @@ const ShowRequest = () =>
 
                     ))
                 }
+                </OverflowContainer>
+
+                <div className="mx-auto">
+                    <BackButton />
                 </div>
 
             </MenuLayout>

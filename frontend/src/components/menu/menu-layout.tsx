@@ -13,15 +13,17 @@ type MenuLayoutProps =
 {
     children: ReactNode;
     navItems: NavItem[];
+    hasBackItem?: boolean;
     justify?: string;
 }
 
-const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
+const MenuLayout = ( { children, navItems, justify = 'justify-between' } : MenuLayoutProps) =>
 {
 
     const [showMobileNav, setShowMobileNav] = useState(false);
 
     const changeMobileNav = () => { setShowMobileNav((prevState) => !prevState)}
+
 
     const navClass = 'flex items-center justify-center text-white font-title h-12 rounded-l-xl';
 
@@ -37,24 +39,24 @@ const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
 
     return(
 
-        <div className="flex flex-col items-center py-10">
+        <div className="flex flex-col flex-grow items-center justify-center py-12">
 
-            <div className="flex flex-col relative lg:flex-row h-[550px] w-[400px] sm:w-2/3 bg-brand-100 rounded-xl">
+            <div className="flex flex-col relative sm:flex-row h-[550px] w-4/5 max-w-[1100px] bg-brand-100 rounded-xl">
 
-                <aside className="hidden lg:flex flex-col w-48 bg-brand-200 rounded-l-xl pl-2 py-2 gap-2">
+                <aside className="hidden sm:flex flex-col w-48 bg-brand-200 rounded-l-xl pl-2 py-2 gap-2">
 
                     {nav}
             
                 </aside>
 
                 <div>
-                    <FontAwesomeIcon onClick={changeMobileNav} className="lg:hidden text-3xl w-8 p-1 text-zinc-200 hover:text-brand-400 hover:cursor-pointer" icon={faBars} /> 
+                    <FontAwesomeIcon onClick={changeMobileNav} className="sm:hidden text-3xl w-8 p-1 text-zinc-200 hover:text-brand-400 hover:cursor-pointer" icon={faBars} /> 
                 </div>
                 
 
                 {
                     showMobileNav && 
-                    <div className="absolute z-50 flex flex-col top-10 left-1 bg-brand-200 w-32 lg:hidden rounded-xl shadow-lg gap-1">
+                    <div className="absolute z-30 flex flex-col top-10 left-1 bg-brand-200 w-32 sm:hidden rounded-xl shadow-lg gap-1">
 
                         {nav}
 
@@ -62,7 +64,7 @@ const MenuLayout = ( { children, navItems, justify } : MenuLayoutProps) =>
 
                 }
 
-                <main className={`flex flex-col w-full h-[520px] p-4 gap-6 ${justify ?? ''}`}>
+                <main className={`flex flex-col relative w-full h-[520px] p-4 gap-6 ${justify}`}>
 
                     {children}
 

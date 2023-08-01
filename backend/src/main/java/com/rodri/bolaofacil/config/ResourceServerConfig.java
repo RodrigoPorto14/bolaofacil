@@ -29,7 +29,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	@Autowired
 	private JwtTokenStore tokenStore;
 	
-	private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**"};
+	private static final String[] PUBLIC = { "/users/verify", "/oauth/token", "/h2-console/**"};
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -42,7 +42,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		if(Arrays.asList(env.getActiveProfiles()).contains("test")) http.headers().frameOptions().disable(); //H2	
 		
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/users").permitAll()
+			.antMatchers(HttpMethod.POST, "/users/**").permitAll()
 		    .antMatchers(PUBLIC).permitAll()
 			.anyRequest().authenticated();	
 		

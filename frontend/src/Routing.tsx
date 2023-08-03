@@ -9,6 +9,8 @@ import UpdateResource from "./pages/update-resource";
 import ShowParticipant from "./pages/show-participant";
 import ShowRequest from "./pages/show-request";
 import CreateResource from "./pages/create-resource";
+import ConfirmEmail from "./pages/confirm-email";
+import Error404 from "./pages/errors/error404";
 import { useAuth } from "./context/AuthProvider/useAuth";
 import { ParticipantProvider } from "./context/ParticipantProvider";
 
@@ -49,15 +51,17 @@ const Routing = () =>
               <Route index element={<Home />} />
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
+              <Route path='/confirm-email/:token' element={<ConfirmEmail/>} />
             </>
           }
        
+          <Route path='/404' element={<Error404 />} />
           <Route path="*" element={<Navigate to={userAuthenticated ? '/sweepstakes' : '/'} replace />} />
         </Routes>
       </BrowserRouter>
     );
 
-    return <p>Loading</p>
+    return <></>
 
 };
 

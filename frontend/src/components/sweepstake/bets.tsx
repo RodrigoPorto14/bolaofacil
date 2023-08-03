@@ -86,7 +86,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
     const scoreClass = "w-8 text-center";
     const versusClass = "w-4 text-center";
     const inputClass = (error: boolean, date : string) => `w-8 border text-center ${error ? 'border-red-500' : 'border-black'}  ${isPastDate(date) ? 'bg-gray-200' : ''}`;
-    const teamNameClass = "font-bold text-sm sm:text-lg";
+    const teamNameClass = "font-bold hidden sm:block sm:text-lg";
     const teamDivClass = "w-full flex gap-2 items-center ";
     const teamImgSize = "30";
     const arrowsClass = "absolute top-0 text-2xl hover:text-brand-400 hover:cursor-pointer"
@@ -131,7 +131,15 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
                             <div className="flex w-full items-center gap-3">
 
                                 <div className={teamDivClass+'flex-row-reverse flex-grow'}>
-                                    <img src={bet.match.homeTeam.imgUri} alt="" width={teamImgSize} height={teamImgSize}></img>
+                                    <img 
+                                        src={bet.match.homeTeam.imgUri} 
+                                        alt="" 
+                                        width={teamImgSize} 
+                                        height={teamImgSize}
+                                        data-tooltip-id="tooltip"
+                                        data-tooltip-content={bet.match.homeTeam.name}
+                                    >
+                                    </img>
                                     <p className={teamNameClass}>{bet.match.homeTeam.name}</p>
                                 </div>
 
@@ -169,8 +177,17 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
                                 <div className={teamDivClass+' flex-grow'}>
                                     
-                                    <img src={bet.match.awayTeam.imgUri} alt="" width={teamImgSize} height={teamImgSize}></img>
+                                    <img 
+                                        src={bet.match.awayTeam.imgUri} 
+                                        alt="" 
+                                        width={teamImgSize} 
+                                        height={teamImgSize}
+                                        data-tooltip-id="tooltip"
+                                        data-tooltip-content={bet.match.awayTeam.name}
+                                    >
+                                    </img>
                                     <p className={teamNameClass}>{bet.match.awayTeam.name}</p>
+                                    
                                 </div>
 
                             </div>

@@ -1,8 +1,5 @@
 import jwtDecode from 'jwt-decode';
 
-export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'bolaofacil';
-export const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? '140301ro';
-
 type AccessToken = 
 {
   exp: number;
@@ -18,7 +15,7 @@ export const saveToken = (token : string) =>
 }
 
 /****************************************************************** 
-Salva o token no localStorage
+Remove o token do localStorage
 ******************************************************************/
 export const removeToken = () => 
 {

@@ -2,6 +2,7 @@ import Header from "../components/header/header"
 import MenuLayout from "../components/menu/menu-layout"
 import MenuItem from "../components/menu/menu-item"
 import OverflowContainer from "../components/menu/overflow-container"
+import OwnerIcon from "../components/sweepstake/owner-icon"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faLock, faLockOpen, faRightFromBracket, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { menuItems } from "../utils/nav-items"
@@ -96,9 +97,9 @@ const Search = () =>
                                         <p>{sweepstake.name}</p>
                                     </div>
                                     
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-2">
 
-                                        <p>{`Criado por: ${sweepstake.ownerName}`}</p>
+                                        <OwnerIcon ownerName={sweepstake.ownerName} />
                                         { 
                                             sweepstake.private_ ? 
 

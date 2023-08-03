@@ -13,7 +13,7 @@ const SweepstakeForm = ({ onSubmit, buttonName, resource, onDelete, create=false
     {
         name: z.string()
                 .min(4, 'Deve conter no mínimo 4 caracteres')
-                .max(30, 'Deve conter no máximo 30 caracteres'),
+                .max(25, 'Deve conter no máximo 25 caracteres'),
 
         tournament: z.string()
                      .optional(),

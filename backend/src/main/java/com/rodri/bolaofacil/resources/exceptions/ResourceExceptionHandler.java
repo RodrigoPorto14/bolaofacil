@@ -14,6 +14,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
 import com.rodri.bolaofacil.services.exceptions.ForbiddenException;
+import com.rodri.bolaofacil.services.exceptions.InvalidTokenException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 import com.rodri.bolaofacil.services.exceptions.UnauthorizedException;
 
@@ -33,6 +34,14 @@ public class ResourceExceptionHandler {
 	{
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		StandardError error = new StandardError(Instant.now(),status.value(),"Database exception",e.getMessage(),request.getRequestURI());
+		return ResponseEntity.status(status).body(error);
+	}
+	
+	@ExceptionHandler(InvalidTokenException.class)
+	public ResponseEntity<StandardError> invalidToken(InvalidTokenException e, HttpServletRequest request)
+	{
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError error = new StandardError(Instant.now(),status.value(),"Invalid token exception",e.getMessage(),request.getRequestURI());
 		return ResponseEntity.status(status).body(error);
 	}
 	

@@ -33,6 +33,10 @@ public class UserDTO implements Serializable {
 		active = entity.isActive();
 	}
 	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

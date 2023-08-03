@@ -38,17 +38,16 @@ public class UserResource {
     }
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO insertDto)
+	public ResponseEntity<String> insert(@Valid @RequestBody UserInsertDTO insertDto)
 	{
-		UserDTO dto = service.insert(insertDto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
+		//URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(insertDto.getId()).toUri();
+		return ResponseEntity.ok().body(service.insert(insertDto));
 	}
 	
 	@PostMapping(value = "/send-email")
-	public ResponseEntity<Void> sendVerificationEmail(@RequestBody UserDTO dto)
+	public ResponseEntity<Void> sendVerificationEmail(@RequestParam("url") String url, @RequestParam("token") String token)
 	{
-		service.sendVerificationEmail(dto);
+		service.sendVerificationEmail(url, token);
 		return ResponseEntity.noContent().build();
 	}
 

@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { CLIENT_ID, CLIENT_SECRET, getToken } from '../context/AuthProvider/auth';
-import { useAuth } from '../context/AuthProvider/useAuth';
+import { getToken } from '../context/AuthProvider/auth';
+import { createBrowserHistory } from 'history';
+import { removeToken } from '../context/AuthProvider/auth';
 
 export type LoginData = 
 {
@@ -9,24 +10,37 @@ export type LoginData =
   password: String;
 }
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'bolaofacil';
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? '140301ro';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
+export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL ?? 'http://localhost:3000';
 
 /****************************************************************** 
 Intercepta requisições axios, caso essa requisição tenha sucesso,
 apenas retorna a resposta, caso fracasse com erro 401 (Unauthorized)
 é feito o logout do usuário
 ******************************************************************/
-/*axios.interceptors.response.use(
+axios.interceptors.response.use(
   (response) =>  response, 
   (error) =>
   {
-    const auth = useAuth();
-    if (error.response.status === 401)
-      auth.logout()
-    
+    const history = createBrowserHistory();
+    const errorStatus = error.response.status
+    if (errorStatus === 401)
+    {
+      removeToken();
+      history.go(0);
+    }
+      
+    if(errorStatus === 403 || errorStatus === 404)
+    {
+      history.push('/404');
+      history.go(0);
+    }
+
     return Promise.reject(error);
   }
-);*/
+);
 
 /****************************************************************** 
 Realiza requisições axios sem cabeçalho configurado e com a URL base
@@ -37,7 +51,7 @@ export const makeRequest = (params: AxiosRequestConfig) =>
   return axios(
   {
     ...params,
-    baseURL: BASE_URL
+    baseURL: BACKEND_URL
   });
 }
 

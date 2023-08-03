@@ -35,8 +35,7 @@ const Login = () =>
                 setInvalidUser(false);
                 navigate('/sweepstakes');
             })
-            .catch(error => {setInvalidUser(true);} )
-            
+            .catch((error) => {setInvalidUser(true);} )
     }
 
     return(

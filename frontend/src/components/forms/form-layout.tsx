@@ -18,7 +18,7 @@ const FormLayout = ({children, onSubmit, buttonName, onDelete, resource, create=
                                     
                     </div>
                                 
-                    <div className="flex gap-4 mx-auto">
+                    <div className="flex gap-4 flex-wrap justify-center">
                         <BackButton />
                         <MainButton> {buttonName} </MainButton>
                         { onDelete && <DeleteButton onClick={onDelete} /> }

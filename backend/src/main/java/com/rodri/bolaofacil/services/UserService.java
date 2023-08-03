@@ -15,6 +15,10 @@ import com.rodri.bolaofacil.dto.UserInsertDTO;
 import com.rodri.bolaofacil.enitities.User;
 import com.rodri.bolaofacil.repositories.UserRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
+import com.rodri.bolaofacil.services.exceptions.InvalidTokenException;
+import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
+
+import io.jsonwebtoken.Claims;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -45,43 +49,47 @@ public class UserService implements UserDetailsService{
 	}
 	
 	@Transactional
-	public UserDTO insert(UserInsertDTO dto) 
+	public String insert(UserInsertDTO dto) 
 	{
 		validateUser(dto.getEmail(), dto.getNickname());
 		User entity = new User();
-		entity.setEmail(dto.getEmail());
-		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-		entity.setNickname(dto.getNickname());
-		userRep.save(entity);
-		
-		User user = userRep.findByEmail(dto.getEmail());
-		String token = jwtUtil.generateToken(user.getId());
-		user.setToken(token);
-		userRep.save(user);
-		
-		return new UserDTO(user);		
-	}
-	
-	@Transactional(readOnly = true)
-	public void sendVerificationEmail(UserDTO dto) 
-	{
-		String verificationLink = baseUrl + "/users/verify?token=" + dto.getToken();
-        String subject = "Verificação de Registro Bolão Fácil";
-        String message = "Por favor, clique no link abaixo para verificar seu registro:\n\n" + verificationLink;
-        emailService.sendEmail(dto.getEmail(), subject, message);
+		User user = userRep.save(entity);
+		dto.setId(user.getId());
+		String token = jwtUtil.generateToken(dto);
+		return token;	
 	}
 	
 	@Transactional
 	public String verifyUser(String token) 
 	{
-		User user = userRep.findByToken(token);
+		if(!jwtUtil.validateToken(token))
+			throw new InvalidTokenException("Token inválido ou expirado");
 		
-		if(user == null)
-			return "Token inválido ou expirado";
+		Claims claims = jwtUtil.getClaims(token);
+		Long id = Long.parseLong(claims.getSubject());
+		String email = (String)claims.get("email");
+		String nickname = (String)claims.get("nickname");
+		
+		validateUser(email,nickname);
+		
+		String password = passwordEncoder.encode((String)claims.get("password"));
         
-		user.setActive(true);
-		userRep.save(user);
+		User entity = userRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não cadastrado"));
+		entity.setNickname(nickname);
+		entity.setEmail(email);
+		entity.setPassword(password);
+		userRep.save(entity);
 		return "Verificação concluída com sucesso";
+	}
+	
+	@Transactional(readOnly = true)
+	public void sendVerificationEmail(String url, String token) 
+	{
+		String email = (String)jwtUtil.getClaims(token).get("email");
+		String verificationLink = url + "/confirm-email/" + token;
+        String subject = "Verificação de Registro Bolão Fácil";
+        String message = "Por favor, clique no link abaixo para verificar seu registro:\n\n" + verificationLink;
+        emailService.sendEmail(email, subject, message);
 	}
 	
 	@Override

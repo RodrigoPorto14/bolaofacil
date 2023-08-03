@@ -1,6 +1,7 @@
 import Header from "../components/header/header"
 import MenuLayout from "../components/menu/menu-layout"
 import MenuItemLayout from "../components/menu/menu-item-layout"
+import OwnerIcon from "../components/sweepstake/owner-icon"
 import { menuItems, configItems } from "../utils/nav-items"
 import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
@@ -49,7 +50,10 @@ const ShowResource = ({ resource } : ResourceProps) =>
                         (
                             <MenuItem redirect={`${location.pathname}/${resource.id}`} key={resource.id}>
                                 <p>{resource.name}</p>
-                                { isSweepstake && <p>{`Criado por: ${resource.ownerName}`}</p> }
+                                { 
+                                    isSweepstake && 
+                                    <OwnerIcon ownerName={resource.ownerName} />
+                                }
                             </MenuItem>
 
                         ))

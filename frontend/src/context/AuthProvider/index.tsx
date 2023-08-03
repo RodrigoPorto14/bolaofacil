@@ -33,15 +33,11 @@ const AuthProvider = ({ children } : {children : ReactNode}) =>
                 .then(response =>
                 {  
                     const data = response.data;
-                    if(data.active)
-                    {
-                        saveToken(data.access_token);
-                        setUserAuthenticated(true)
-                        setUser({id : data.userId, nickname: data.userNickname, email: data.userEmail});
-                        setLoading(false);
-                    }
-                    else 
-                        return Promise.reject()
+                    saveToken(data.access_token);
+                    setUserAuthenticated(true)
+                    setUser({id : data.userId, nickname: data.userNickname, email: data.userEmail});
+                    setLoading(false);
+        
 
                 })
                 .catch(error => Promise.reject(error))

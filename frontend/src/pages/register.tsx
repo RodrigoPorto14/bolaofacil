@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { makeRequest } from '../utils/request';
 import { useNavigate } from 'react-router-dom';
+import { FRONTEND_URL } from '../utils/request';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -55,7 +56,9 @@ const Register = () =>
                 setExistingEmail(false);
                 setExistingNickname(false);
 
-                makeRequest({ url: '/users/send-email', data: response.data, method: 'POST'})
+                const params = {url: FRONTEND_URL, token: response.data};
+
+                makeRequest({ url: '/users/send-email', params, method: 'POST'})
 
                 navigate('/login')
             })

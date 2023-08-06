@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rodri.bolaofacil.cblol.CblolData;
 import com.rodri.bolaofacil.dto.BetDTO;
 import com.rodri.bolaofacil.dto.MatchDTO;
 import com.rodri.bolaofacil.enitities.ExternalBet;
@@ -81,10 +79,7 @@ public class LeaguesService
         int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, qtdMatches);
 
-        if (fromIndex < toIndex)
-            bets = bets.subList(fromIndex, toIndex);
-        else 
-            bets = List.of();
+        bets = (fromIndex < toIndex) ? bets.subList(fromIndex, toIndex) : List.of();
         
         Pageable pageable = PageRequest.of(page, size);
         return new PageImpl<>(bets, pageable, qtdMatches);

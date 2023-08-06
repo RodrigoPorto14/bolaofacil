@@ -28,10 +28,10 @@ public class ParticipantResource {
 	ParticipantService service;
 	
 	
-	@GetMapping(value = "/{userId}")
-	public ResponseEntity<ParticipantDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long userId)
+	@GetMapping(value = "/authenticated")
+	public ResponseEntity<ParticipantDTO> findAuthenticatedBySweepstake(@PathVariable Long sweepstakeId)
 	{
-		return ResponseEntity.ok().body(service.findById(sweepstakeId, userId));
+		return ResponseEntity.ok().body(service.findAuthenticatedBySweepstake(sweepstakeId));
 	}
 	
 	@GetMapping()
@@ -49,7 +49,7 @@ public class ParticipantResource {
 	}
 	
 	@PostMapping(value = "/{userId}")
-	public ResponseEntity<ParticipantSampleDTO> insertAuthenticated(@PathVariable Long sweepstakeId, @PathVariable Long userId)
+	public ResponseEntity<ParticipantSampleDTO> insert(@PathVariable Long sweepstakeId, @PathVariable Long userId)
 	{
 		ParticipantSampleDTO dto = service.insert(sweepstakeId, userId);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getUserId()).toUri();

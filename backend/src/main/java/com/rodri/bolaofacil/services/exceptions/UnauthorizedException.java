@@ -3,9 +3,9 @@ package com.rodri.bolaofacil.services.exceptions;
 public class UnauthorizedException extends RuntimeException{
 	private static final long serialVersionUID = 1L;
 	
-	public UnauthorizedException(String msg)
+	public UnauthorizedException()
 	{
-		super(msg);
+		super("Invalid user");
 	}
 
 }

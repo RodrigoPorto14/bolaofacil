@@ -34,7 +34,7 @@ public class SweepstakeService {
 	public SweepstakeDTO findById(Long id)
 	{
 		authService.participantIsOwner(id);
-		Sweepstake entity = sweepstakeRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Sweepstake entity = sweepstakeRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
 		return new SweepstakeDTO(entity);
 	}
 	
@@ -57,6 +57,7 @@ public class SweepstakeService {
 	{
 		User user = authService.authenticated();
 		Sweepstake sweepstake = copyDtoToEntity(new Sweepstake(), dto);
+		sweepstake.setTournament(dto.getTournament());
 		sweepstakeRep.save(sweepstake);
 		participantRep.save(new Participant(user,sweepstake,Role.OWNER,Instant.now()));
 		return new SweepstakeDTO(sweepstake);
@@ -73,14 +74,13 @@ public class SweepstakeService {
 			sweepstakeRep.save(sweepstake);
 			return new SweepstakeDTO(sweepstake);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+id); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 
 	private Sweepstake copyDtoToEntity(Sweepstake entity, SweepstakeDTO dto) 
 	{
 		entity.setName(dto.getName());
 		entity.setPrivate(dto.getPrivate_());
-		entity.setTournament(dto.getTournament());
 		return entity;
 	}
 }

@@ -2,8 +2,9 @@ package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.rodri.bolaofacil.enitities.User;
 
@@ -12,25 +13,15 @@ public class UserDTO implements Serializable {
 	
 	private Long id;
 	
-	@NotBlank(message = "Campo obrigatório")
-	@Email(message = "Favor entrar um email válido")
-	private String email;
-	
-	@NotBlank(message = "Campo obrigatório")
+	@NotBlank @Size(min = 4, max = 16) @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Apenas letra e numeros são permitidos")
 	private String nickname;
-	
-	private String token;
-	private boolean active;
 	
 	public UserDTO() {}
 	
 	public UserDTO(User entity)
 	{
 		id = entity.getId();
-		email = entity.getEmail();
 		nickname = entity.getNickname();
-		token = entity.getToken();
-		active = entity.isActive();
 	}
 	
 	public void setId(Long id) {
@@ -40,22 +31,9 @@ public class UserDTO implements Serializable {
 	public Long getId() {
 		return id;
 	}
-
-	public String getEmail() {
-		return email;
-	}
 	
 	public String getNickname() {
 		return nickname;
 	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-	
 }
 

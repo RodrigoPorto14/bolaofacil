@@ -3,6 +3,8 @@ package com.rodri.bolaofacil.resources;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +46,7 @@ public class SweepstakeResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<SweepstakeDTO> insert(@RequestBody SweepstakeDTO dto)
+	public ResponseEntity<SweepstakeDTO> insert(@Valid @RequestBody SweepstakeDTO dto)
 	{
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -52,7 +54,7 @@ public class SweepstakeResource {
 	}
 	
 	@PutMapping(value="/{id}")
-	public ResponseEntity<SweepstakeDTO> update(@PathVariable Long id, @RequestBody SweepstakeDTO dto)
+	public ResponseEntity<SweepstakeDTO> update(@PathVariable Long id, @Valid @RequestBody SweepstakeDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(id, dto));
 	}

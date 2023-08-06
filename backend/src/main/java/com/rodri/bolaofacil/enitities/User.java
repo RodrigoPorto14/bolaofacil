@@ -31,10 +31,6 @@ public class User implements UserDetails,Serializable {
 	
 	private String password;
 	
-	private String token;
-	
-	private boolean active;
-	
 	public User() {}
 
 	public User(Long id, String email, String nickname, String password) {
@@ -74,22 +70,6 @@ public class User implements UserDetails,Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	@Override

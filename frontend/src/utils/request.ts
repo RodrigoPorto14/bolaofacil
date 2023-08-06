@@ -3,6 +3,7 @@ import qs from 'qs';
 import { getToken } from '../context/AuthProvider/auth';
 import { createBrowserHistory } from 'history';
 import { removeToken } from '../context/AuthProvider/auth';
+import { toast } from 'react-toastify';
 
 export type LoginData = 
 {
@@ -24,21 +25,29 @@ axios.interceptors.response.use(
   (response) =>  response, 
   (error) =>
   {
-    const history = createBrowserHistory();
-    const errorStatus = error.response.status
-    if (errorStatus === 401)
-    {
-      removeToken();
-      history.go(0);
-    }
-      
-    if(errorStatus === 403 || errorStatus === 404)
-    {
-      history.push('/404');
-      history.go(0);
-    }
+      const history = createBrowserHistory();
+      const errorStatus = error.response.status
+      if (errorStatus === 401)
+      {
+        removeToken();
+        history.go(0);
+      }
+        
+      if(errorStatus === 403 || errorStatus === 404)
+      {
+        history.replace('/404');
+        history.go(0);
+      }
 
-    return Promise.reject(error);
+      if(errorStatus === 422)
+      {
+        const errors = error.response.data.errors;
+        if(errors)
+            for(let e of errors)
+                toast.error(e.message)
+      }
+
+      return Promise.reject(error);
   }
 );
 

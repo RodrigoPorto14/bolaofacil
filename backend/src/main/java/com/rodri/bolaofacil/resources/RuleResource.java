@@ -3,6 +3,8 @@ package com.rodri.bolaofacil.resources;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +41,7 @@ public class RuleResource {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<RuleDTO> insert(@PathVariable Long sweepstakeId, @RequestBody RuleDTO dto)
+	public ResponseEntity<RuleDTO> insert(@PathVariable Long sweepstakeId, @Valid @RequestBody RuleDTO dto)
 	{
 		dto = service.insert(sweepstakeId, dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -47,7 +49,7 @@ public class RuleResource {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<RuleDTO> update(@PathVariable Long sweepstakeId,@PathVariable Long id, @RequestBody RuleDTO dto)
+	public ResponseEntity<RuleDTO> update(@PathVariable Long sweepstakeId,@PathVariable Long id, @Valid @RequestBody RuleDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
 	}

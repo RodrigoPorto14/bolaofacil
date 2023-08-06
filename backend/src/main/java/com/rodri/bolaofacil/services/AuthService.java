@@ -9,11 +9,13 @@ import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.User;
 import com.rodri.bolaofacil.enitities.enums.Role;
+import com.rodri.bolaofacil.enitities.enums.Tournament;
 import com.rodri.bolaofacil.enitities.pk.ParticipantPK;
 import com.rodri.bolaofacil.repositories.ParticipantRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.repositories.UserRepository;
 import com.rodri.bolaofacil.services.exceptions.ForbiddenException;
+import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 import com.rodri.bolaofacil.services.exceptions.UnauthorizedException;
 
 @Service
@@ -36,15 +38,25 @@ public class AuthService {
 			String username = SecurityContextHolder.getContext().getAuthentication().getName();
 			return userRep.findByEmail(username);
 		}
-		catch(Exception e) { throw new UnauthorizedException("Invalid user"); }
+		catch(Exception e) { throw new UnauthorizedException(); }
 	}
+	
+	private void sweepstakeIsCustom(Long sweepstakeId)
+	{
+		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId)
+											 .orElseThrow(() -> new ResourceNotFoundException());
+		
+		if(sweepstake.getTournament() != Tournament.PERSONALIZADO)
+			throw new ForbiddenException();
+	}
+	
 	
 	public Participant validateParticipant(Long sweepstakeId)
 	{
 		Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 		User user = authenticated();
 		ParticipantPK participantId = new ParticipantPK(user,sweepstake);
-		return participantRep.findById(participantId).orElseThrow(() -> new ForbiddenException("Access denied"));
+		return participantRep.findById(participantId).orElseThrow(() -> new ForbiddenException());
 	}
 	
 	private void validateRoles(Long sweepstakeId, Role... roles)
@@ -55,8 +67,24 @@ public class AuthService {
 		for(Role role : roles) 
 			if(participantRole == role) return;
 		
-		throw new ForbiddenException("Access denied");
+		throw new ForbiddenException();
 	}
 	
 	public void participantIsOwner(Long sweepstakeId) { validateRoles(sweepstakeId, Role.OWNER); }
+	
+	public void participantIsOwnerOrAdmin(Long sweepstakeId) { validateRoles(sweepstakeId, Role.OWNER, Role.ADMIN); }
+	
+	public void resourceBelongsSweepstake(Long resourceId, Long sweepstakeId)
+	{
+		if(!resourceId.equals(sweepstakeId))
+			throw new ForbiddenException();	
+	}
+	
+	public void checkCustomSweepstakeResourcePermissions(Long sweepstakeId)
+	{
+		participantIsOwnerOrAdmin(sweepstakeId);
+		sweepstakeIsCustom(sweepstakeId);
+	}
+	
+	
 }

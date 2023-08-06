@@ -1,17 +1,25 @@
 package com.rodri.bolaofacil.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 import com.rodri.bolaofacil.enitities.Rule;
 
 
 public class RuleDTO extends RuleSampleDTO {
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer exactScore;
+	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer winnerScore;
+	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer scoreDifference;
+	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer loserScore;
+	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer winner;
-	private Long sweepstakeId;
 	
 	public RuleDTO() {}
 
@@ -52,9 +60,5 @@ public class RuleDTO extends RuleSampleDTO {
 
 	public Integer getWinner() {
 		return winner;
-	}
-	
-	public Long getSweepstakeId() {
-		return sweepstakeId;
 	}
 }

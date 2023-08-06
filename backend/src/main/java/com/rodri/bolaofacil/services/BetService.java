@@ -43,7 +43,7 @@ public class BetService {
 	public BetInsertDTO insert(Long sweepstakeId, BetInsertDTO dto) 
 	{
 		Participant participant = authService.validateParticipant(sweepstakeId);
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
 		
 		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
 		{
@@ -54,7 +54,7 @@ public class BetService {
 				betRep.save(bet);
 				return new BetInsertDTO(bet);
 			}
-			catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found"); }
+			catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 			
 		}
 		else
@@ -69,7 +69,7 @@ public class BetService {
 	public BetInsertDTO update(Long sweepstakeId, BetInsertDTO dto)
 	{
 		Participant participant = authService.validateParticipant(sweepstakeId);
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
 
 		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
 		{
@@ -82,7 +82,7 @@ public class BetService {
 				betRep.save(bet);
 				return new BetInsertDTO(bet);
 			}
-			catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found"); }
+			catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 			
 		}
 		else

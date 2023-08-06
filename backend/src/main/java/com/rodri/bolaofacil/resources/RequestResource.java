@@ -23,13 +23,13 @@ public class RequestResource {
 	@Autowired
 	RequestService service;
 	
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<List<RequestDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<RequestDTO> insert(@PathVariable Long sweepstakeId)
 	{
 		RequestDTO dto = service.insert(sweepstakeId);

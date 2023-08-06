@@ -20,7 +20,6 @@ import com.rodri.bolaofacil.enitities.Team;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.repositories.TeamRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
-import com.rodri.bolaofacil.services.exceptions.ForbiddenException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -41,32 +40,29 @@ public class TeamService {
 	@Transactional(readOnly=true)
 	public TeamDTO findById(Long sweepstakeId, Long id)
 	{
-		authService.participantIsOwner(sweepstakeId);
-		Team team = teamRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		
-		if(team.getSweepstake().getId() != sweepstakeId) 
-			throw new ForbiddenException("Access denied");
-		
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
+		Team team = teamRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+		authService.resourceBelongsSweepstake(team.getSweepstake().getId(), sweepstakeId);
 		return new TeamDTO(team);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<TeamSampleDTO> findAllBySweepstake(Long sweepstakeId)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Team> teams = teamRep.findAllBySweepstake(sweepstake);
 			return teams.stream().map(team -> new TeamSampleDTO(team)).toList();
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
 	public TeamDTO insert(Long sweepstakeId, TeamDTO dto)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
@@ -75,33 +71,46 @@ public class TeamService {
 			teamRep.save(team);
 			return new TeamDTO(team);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
 	public TeamDTO update(Long sweepstakeId, Long id, TeamDTO dto)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Team team = teamRep.getReferenceById(id);
-			
-			if(team.getSweepstake().getId() != sweepstakeId) 
-				throw new ForbiddenException("Access denied");
-			
+			authService.resourceBelongsSweepstake(team.getSweepstake().getId(), sweepstakeId);
 			team = copyDtoToEntity(team,dto);
 			teamRep.save(team);
 			return new TeamDTO(team);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+id); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
-		authService.participantIsOwner(sweepstakeId);
-		try{teamRep.deleteById(id);}
-		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException("Id not found " +id);}
-		catch(DataIntegrityViolationException e) {throw new DataBaseException("Integrity violation");}
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
+		try
+		{
+			//Team team = teamRep.getReferenceById(id);
+			Team team = teamRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+			authService.resourceBelongsSweepstake(team.getSweepstake().getId(), sweepstakeId);
+			teamRep.delete(team);
+		}
+		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException();}
+		catch(DataIntegrityViolationException e) 
+		{
+			throw new DataBaseException("Não foi possível deletar pois esse time pertence à uma partida");
+		}
+	}
+
+	public UriDTO uploadFile(Long sweepstakeId, MultipartFile file) 
+	{
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
+		URL url = s3Service.uploadFile(file);
+		return new UriDTO(url.toString());
 	}
 	
 	private Team copyDtoToEntity(Team entity, TeamDTO dto)
@@ -109,13 +118,6 @@ public class TeamService {
 		entity.setName(dto.getName());
 		entity.setImgUri(dto.getImgUri());
 		return entity;
-	}
-
-	public UriDTO uploadFile(Long sweepstakeId, MultipartFile file) 
-	{
-		authService.participantIsOwner(sweepstakeId);
-		URL url = s3Service.uploadFile(file);
-		return new UriDTO(url.toString());
 	}
 }
 	

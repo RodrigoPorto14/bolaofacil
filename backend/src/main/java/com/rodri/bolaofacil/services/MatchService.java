@@ -6,7 +6,6 @@ import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import com.rodri.bolaofacil.repositories.RuleRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.repositories.TeamRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
-import com.rodri.bolaofacil.services.exceptions.ForbiddenException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -44,32 +42,29 @@ public class MatchService {
 	@Transactional(readOnly=true)
 	public MatchUpdateDTO findById(Long sweepstakeId, Long id)
 	{
-		authService.participantIsOwner(sweepstakeId);
-		Match match = matchRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		
-		if(match.getSweepstake().getId() != sweepstakeId) 
-			throw new ForbiddenException("Access denied");
-		
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
+		Match match = matchRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+		authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
 		return new MatchUpdateDTO(match);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<MatchSampleDTO> findAllBySweepstake(Long sweepstakeId)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Match> matches = matchRep.findAllBySweepstakeOrderByStartMoment(sweepstake);
 			return matches.stream().map( match -> new MatchSampleDTO(match)).toList();
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
 	public MatchInsertDTO insert(Long sweepstakeId, MatchInsertDTO dto)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
@@ -79,33 +74,38 @@ public class MatchService {
 			matchRep.save(match);
 			return new MatchInsertDTO(match);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
 	public MatchUpdateDTO update(Long sweepstakeId, Long id, MatchUpdateDTO dto)
 	{
-		authService.participantIsOwner(sweepstakeId);
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Match match = matchRep.getReferenceById(id);
-			
-			if(match.getSweepstake().getId() != sweepstakeId) 
-				throw new ForbiddenException("Access denied");
-			
+			authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
 			copyDtoToEntity(match,dto);
 			matchRep.save(match);
 			return new MatchUpdateDTO(match);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+id); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
-		authService.participantIsOwner(sweepstakeId);
-		try{matchRep.deleteById(id);}
-		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException("Id not found " +id);}
-		catch(DataIntegrityViolationException e) {throw new DataBaseException("Integrity violation");}
+		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
+		try
+		{
+			//Match match = matchRep.getReferenceById(id);
+			Match match = matchRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+			authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
+			matchRep.delete(match);
+		}
+		catch(DataIntegrityViolationException e) 
+		{
+			throw new DataBaseException("Não foi possível deletar pois existem palpites nessa partida");
+		}
 	}
 	
 	private void copyInsertDtoToEntity(Match entity, MatchInsertDTO dto)
@@ -124,7 +124,7 @@ public class MatchService {
 			entity.setType(dto.getType());
 			entity.setStartMoment(dto.getStartMoment());
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+id); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	private void copyDtoToEntity(Match entity, MatchUpdateDTO dto)

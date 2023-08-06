@@ -32,7 +32,6 @@ const CreateResource = ( { resource } : ResourceProps) =>
 
     const onSubmit = (data : any) => 
     {   
-        console.log(data)
         makePrivateRequest( {url, data, method: 'POST'} )
             .then((response) =>
             {
@@ -41,7 +40,7 @@ const CreateResource = ( { resource } : ResourceProps) =>
                 path = isSweepstake ? path + '/' + response.data.id : path;
                 navigate(path)
             })
-            .catch((error) => console.log(error))
+            .catch(error => {})
     }
 
     return(

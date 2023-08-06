@@ -28,7 +28,6 @@ const UpdateResource = ({ resource } : ResourceProps) =>
 
     useEffect(() =>
     {
-        console.log(url)
         makePrivateRequest( { url } )
             .then((response) =>
             {
@@ -47,11 +46,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
                 const path = previousPath(location.pathname)
                 navigate(path)
             })
-            .catch((error) => 
-            {
-                console.log(error);
-                toast.error("Não foi possível deletar!");
-            })
+            .catch((error) => { toast.error(error.response.data.message); })
     }
 
     // const uploadAndSubmit = (data : any) =>
@@ -71,7 +66,7 @@ const UpdateResource = ({ resource } : ResourceProps) =>
                 if(!isSweepstake)
                     navigate(path)
             })
-            .catch((error) => console.log(error))
+            .catch(error => {})
     }
 
     return(

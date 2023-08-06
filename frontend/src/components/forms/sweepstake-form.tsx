@@ -19,7 +19,7 @@ const SweepstakeForm = ({ onSubmit, buttonName, resource, onDelete, create=false
                      .optional(),
         
         private_: z.string()
-                    .transform(value => value === "true")
+                   .transform(value => value === "true")
     })
     
     type SweepstakeFormData = z.infer<typeof sweepstakeFormSchema>

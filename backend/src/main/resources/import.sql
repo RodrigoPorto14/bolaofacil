@@ -1,6 +1,6 @@
-INSERT INTO tb_user (email, nickname, password, active, token) VALUES ('rodrigo@gmail.com', 'Rodrigo', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G', true, 'teste');
-INSERT INTO tb_user (email, nickname, password, active, token) VALUES ('xablau@gmail.com', 'Xablau', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G', true, 'teste');
-INSERT INTO tb_user (email, nickname, password, active, token) VALUES ('junin@gmail.com', 'Junin', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G', true, 'teste');
+INSERT INTO tb_user (email, nickname, password) VALUES ('rodrigo@gmail.com', 'Rodrigo', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G');
+INSERT INTO tb_user (email, nickname, password) VALUES ('xablau@gmail.com', 'Xablau', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G');
+INSERT INTO tb_user (email, nickname, password) VALUES ('junin@gmail.com', 'Junin', '$2a$10$RxTylgGR/e.3ernvqJxPTOCbRROqLOQB8vpG/y.6mFwX2ylIMt.8G');
 
 INSERT INTO tb_sweepstake (name, is_private, tournament) VALUES ('Carioca 2023', false, 0);
 INSERT INTO tb_sweepstake (name, is_private, tournament) VALUES ('CBLOL 2023', false, 1);

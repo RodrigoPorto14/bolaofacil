@@ -59,7 +59,7 @@ public class SweepstakeDetailsService {
 	public SweepstakeDetailsDTO findSweepstakeDetails(Long sweepstakeId, Integer page)
 	{
 		Participant participant = authService.validateParticipant(sweepstakeId);
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
 		matchRep.findAllBySweepstakeOrderByStartMoment(sweepstake);
 		int SIZE = 5;
 		

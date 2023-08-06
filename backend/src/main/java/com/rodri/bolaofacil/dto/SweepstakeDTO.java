@@ -2,6 +2,10 @@ package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.enums.Tournament;
 
@@ -9,7 +13,10 @@ public class SweepstakeDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank @Size(min = 4, max = 25)
 	private String name;
+	@NotNull
 	private boolean private_;
 	private Tournament tournament;
 	private String ownerName;

@@ -21,8 +21,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
     {
         name: z.string()
             .nonempty('Campo Obrigatório')
-            .min(4, 'Deve conter no mínimo 4 caracteres')
-            .max(30, 'Deve conter no máximo 30 caracteres'),
+            .max(20, 'Deve conter no máximo 20 caracteres'),
         
         exactScore: numberValidation,
         winnerScore: numberValidation,

@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService{
 	public String verifyUser(String token) 
 	{
 		if(!jwtUtil.validateToken(token))
-			throw new InvalidTokenException("Token inválido ou expirado");
+			throw new InvalidTokenException();
 		
 		Claims claims = jwtUtil.getClaims(token);
 		Long id = Long.parseLong(claims.getSubject());
@@ -98,7 +98,7 @@ public class UserService implements UserDetailsService{
 		User user = userRep.findByEmail(username);
 		
 		if(user == null) 
-			throw new UsernameNotFoundException("Email not found"); 
+			throw new UsernameNotFoundException("Email not found");
 		
 		return user;
 	}

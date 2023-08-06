@@ -16,7 +16,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
 
     const numberValidation = z.number()
                               .min(0,'Deve ser maior ou igual a 0')
-                              .max(99,'Deve ser menor ou igual a 99')
+                              
                               .nullable()
                               .optional()
                               

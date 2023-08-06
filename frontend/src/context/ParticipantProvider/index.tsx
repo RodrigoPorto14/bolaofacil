@@ -10,12 +10,10 @@ const ParticipantProvider = ({ children } : {children : ReactNode}) =>
 {
     const [participant, setParticipant] = useState<IParticipant | null>(null);
     const { sweepstakeId } = useParams();
-    const auth = useAuth();
 
     useEffect(() =>
     {
-        console.log("BBBBB")
-        makePrivateRequest({url : `/boloes/${sweepstakeId}/participantes/${auth.id}`})
+        makePrivateRequest({url : `/boloes/${sweepstakeId}/participantes/authenticated`})
             .then(response =>
             {
                 const data = response.data;

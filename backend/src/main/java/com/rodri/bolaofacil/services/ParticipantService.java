@@ -42,17 +42,14 @@ public class ParticipantService {
 	AuthService authService;
 	
 	@Transactional(readOnly=true)
-	public ParticipantDTO findById(Long sweepstakeId, Long userId)
+	public ParticipantDTO findAuthenticatedBySweepstake(Long sweepstakeId)
 	{
 		try
 		{
-			User user = userRep.getReferenceById(userId);
-			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
-			ParticipantPK id = new ParticipantPK(user,sweepstake);
-			Participant participant = participantRep.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+			Participant participant = authService.validateParticipant(sweepstakeId);
 			return new ParticipantDTO(participant);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found"); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional(readOnly=true)
@@ -65,17 +62,17 @@ public class ParticipantService {
 			List<Participant> participants = participantRep.findAllBySweepstakeExceptOwner(sweepstake);
 			return participants.stream().map(participant -> new ParticipantSampleDTO(participant)).toList();
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
 	public ParticipantSampleDTO insertAuthenticated(Long sweepstakeId) 
 	{
 		User user = authService.authenticated();
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
 		
 		if(sweepstake.isPrivate())
-			throw new ForbiddenException("Access denied");
+			throw new ForbiddenException();
 		
 		Participant participant = new Participant(user, sweepstake, Role.PLAYER, Instant.now());
 		participantRep.save(participant);
@@ -94,26 +91,24 @@ public class ParticipantService {
 			participantRep.save(participant);
 			return new ParticipantSampleDTO(participant);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional
-	public ParticipantSampleDTO update(Long sweepstakeId, Long id, ParticipantUpdateDTO dto)
+	public ParticipantSampleDTO update(Long sweepstakeId, Long userId, ParticipantUpdateDTO dto)
 	{
 		authService.participantIsOwner(sweepstakeId);
 		try
 		{
-			User user = userRep.getReferenceById(id);
+			User user = userRep.getReferenceById(userId);
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			Participant participant = participantRep.getReferenceById(new ParticipantPK(user,sweepstake));
 			participant.setRole(dto.getRole());
 			participantRep.save(participant);
 			return new ParticipantSampleDTO(participant);
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+id); }
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
-	
-	
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
@@ -124,9 +119,9 @@ public class ParticipantService {
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			participantRep.deleteById(new ParticipantPK(user,sweepstake));
 		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException("Id not found "+sweepstakeId); }
-		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException("Id not found " +id);}
-		catch(DataIntegrityViolationException e) {throw new DataBaseException("Integrity violation");}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
+		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException();}
+		catch(DataIntegrityViolationException e) {throw new DataBaseException();}
 	}
 
 	

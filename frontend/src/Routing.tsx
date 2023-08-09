@@ -10,7 +10,9 @@ import ShowParticipant from "./pages/show-participant";
 import ShowRequest from "./pages/show-request";
 import CreateResource from "./pages/create-resource";
 import ConfirmEmail from "./pages/confirm-email";
-import Error404 from "./pages/errors/error404";
+import ResetPassword from "./pages/password-reset";
+import RecoveryPassword from "./pages/password-recovery";
+import Error404 from "./pages/error404";
 import { useAuth } from "./context/AuthProvider/useAuth";
 import { ParticipantProvider } from "./context/ParticipantProvider";
 
@@ -52,6 +54,9 @@ const Routing = () =>
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
               <Route path='/confirm-email/:token' element={<ConfirmEmail/>} />
+              <Route path='/password/reset/:token' element={<ResetPassword/>} />
+              <Route path='/password' element={<RecoveryPassword/>} />
+              
             </>
           }
        

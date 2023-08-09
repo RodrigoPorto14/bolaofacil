@@ -29,7 +29,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	@Autowired
 	private JwtTokenStore tokenStore;
 	
-	private static final String[] PUBLIC = { "/users/verify", "/oauth/token", "/h2-console/**"};
+	private static final String[] PUBLIC = { "/users/password-reset", "/users/verify", "/oauth/token", "/h2-console/**"};
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {

@@ -43,7 +43,7 @@ const Login = () =>
         <>
             <Header />
 
-            <AuthFormLayout isLogin={true} onSubmit={handleSubmit(onSubmit)}> 
+            <AuthFormLayout isLogin={true} onSubmit={handleSubmit(onSubmit)} buttonText="ENTRAR"> 
 
                 <Input<LoginUserFormData>
                     label="Email"

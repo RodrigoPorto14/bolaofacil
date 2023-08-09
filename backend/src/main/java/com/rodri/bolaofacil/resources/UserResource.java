@@ -1,18 +1,16 @@
 package com.rodri.bolaofacil.resources;
 
-import java.net.URI;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rodri.bolaofacil.dto.UserDTO;
 import com.rodri.bolaofacil.dto.UserInsertDTO;
@@ -25,17 +23,29 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 	
+	/*****************************************************************
+    					   ENCONTRAR USUARIO                           
+	*****************************************************************/
+	
 	@GetMapping
 	public ResponseEntity<UserDTO> findAuthenticated()
 	{
 		return ResponseEntity.ok().body(service.findAuthenticated());
 	}
 	
-	@GetMapping("/verify")
-    public String verifyUser(@RequestParam("token") String token) 
+	/*****************************************************************
+    					    ATUALIZAR USUARIO                             
+	*****************************************************************/
+	
+	@PutMapping
+	public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO dto)
 	{
-        return service.verifyUser(token);
-    }
+		return ResponseEntity.ok().body(service.update(dto));
+	}
+	
+	/*****************************************************************
+    			CADASTRO DE USUARIO EM DUAS ETAPAS
+	 *****************************************************************/
 	
 	@PostMapping
 	public ResponseEntity<String> insert(@Valid @RequestBody UserInsertDTO insertDto)
@@ -44,10 +54,44 @@ public class UserResource {
 		return ResponseEntity.ok().body(service.insert(insertDto));
 	}
 	
-	@PostMapping(value = "/send-email")
-	public ResponseEntity<Void> sendVerificationEmail(@RequestParam("url") String url, @RequestParam("token") String token)
+	@GetMapping("/verify")
+    public String verifyUser(@RequestParam("token") String token) 
 	{
-		service.sendVerificationEmail(url, token);
+        return service.verifyUser(token);
+    }
+	
+	/*****************************************************************
+	 					 RECUPERAÇÃO DE SENHA
+	 *****************************************************************/
+	
+	@PostMapping(value = "/password-recovery")
+	public ResponseEntity<String> passwordRecovery(@RequestParam("email") String email)
+	{
+		return ResponseEntity.ok().body(service.passwordRecovery(email));
+	}
+	
+	@PutMapping(value = "/password-reset")
+	public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword)
+	{
+		return ResponseEntity.ok().body(service.resetPassword(token, newPassword));
+	}
+	
+	@PostMapping(value = "/validate-token")
+	public ResponseEntity<String> validateRecoveryToken(@RequestParam("token") String token)
+	{
+		return ResponseEntity.ok().body(service.validateRecoveryToken(token));
+	}
+	
+	/*****************************************************************
+							  ENVIAR EMAIL
+	 *****************************************************************/
+	
+	@PostMapping(value = "/send-email")
+	public ResponseEntity<Void> sendEmail(@RequestParam("url") String url, 
+										  @RequestParam("token") String token, 
+										  @RequestParam("type") String type)
+	{
+		service.sendEmail(url, token, type);
 		return ResponseEntity.noContent().build();
 	}
 

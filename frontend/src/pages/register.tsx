@@ -56,7 +56,7 @@ const Register = () =>
                 setExistingEmail(false);
                 setExistingNickname(false);
 
-                const params = {url: FRONTEND_URL, token: response.data};
+                const params = {url: FRONTEND_URL, token: response.data, type : "VERIFICATION"};
 
                 makeRequest({ url: '/users/send-email', params, method: 'POST'})
 
@@ -77,7 +77,7 @@ const Register = () =>
         <>
             <Header />
 
-            <AuthFormLayout isLogin={false} onSubmit={handleSubmit(onSubmit)}>
+            <AuthFormLayout onSubmit={handleSubmit(onSubmit)} buttonText="CADASTRAR">
 
                 <Input<RegisterUserFormData>
                     label="Apelido"

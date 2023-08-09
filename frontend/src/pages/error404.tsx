@@ -1,4 +1,4 @@
-import ErrorLayout from "../../components/error/error-layout";
+import ErrorLayout from "../components/error/error-layout";
 
 const Error404 = () =>
 {

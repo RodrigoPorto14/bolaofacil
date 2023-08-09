@@ -5,7 +5,7 @@ public class ForbiddenException extends RuntimeException{
 	
 	public ForbiddenException()
 	{
-		super("Access denied");
+		super("Acesso não permitido");
 	}
 
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { makeRequest } from "../utils/request";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ const ConfirmEmail = () =>
             })
             .catch(error =>
             {
+                console.log(error)
                 let errorMessage : string = error.response.data.message;
 
                 if(errorMessage.includes("nickname"))

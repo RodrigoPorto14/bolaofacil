@@ -8,6 +8,7 @@ import { useParticipant } from "../context/ParticipantProvider/useParticipant";
 import { useEffect, useState } from 'react'
 import { RankingHeader, Bet } from '../utils/type'
 import { makePrivateRequest } from "../utils/request";
+import { toast } from "react-toastify";
 
 const Sweepstake = () =>
 {
@@ -35,7 +36,6 @@ const Sweepstake = () =>
         makePrivateRequest({ url: `/boloes/${sweepstakeId}/details`, params})
             .then(response =>
             {
-                console.log(response.data)
                 const bets = response.data.bets;
                 const ranking = response.data.ranking;
 
@@ -52,7 +52,7 @@ const Sweepstake = () =>
                 setBets(fetchedBets);
                 setRanking(ranking)
             })
-            .catch(error => console.log(error))
+            .catch(error => { toast.error(error.response.data.error_description); })
     }
     
     return(

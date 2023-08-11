@@ -4,3 +4,10 @@ export interface IParticipant
     tournament?: string;
     role? : string;
 }
+
+export interface IContext extends IParticipant
+{
+    isCustomTournament : () => boolean;
+    isOwner : () => boolean;
+    isOwnerOrAdmin : () => boolean;
+}

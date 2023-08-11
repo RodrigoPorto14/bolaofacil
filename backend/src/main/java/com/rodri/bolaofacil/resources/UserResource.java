@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rodri.bolaofacil.dto.UserDTO;
 import com.rodri.bolaofacil.dto.UserInsertDTO;
+import com.rodri.bolaofacil.dto.UserPasswordUpdateDTO;
 import com.rodri.bolaofacil.services.UserService;
 
 @RestController
@@ -41,6 +42,13 @@ public class UserResource {
 	public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO dto)
 	{
 		return ResponseEntity.ok().body(service.update(dto));
+	}
+	
+	@PutMapping(value = "/password")
+	public ResponseEntity<Void> updatePassword(@Valid @RequestBody UserPasswordUpdateDTO dto)
+	{
+		service.updatePassword(dto);
+		return ResponseEntity.noContent().build();
 	}
 	
 	/*****************************************************************

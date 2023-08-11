@@ -1,13 +1,12 @@
 import Header from "../components/header/header"
 import MenuLayout from "../components/menu/menu-layout"
-import { configItems } from "../utils/nav-items"
+import { ConfigItems } from "../utils/nav-items"
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
 import MenuItem from "../components/menu/menu-item"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 import OverflowContainer from "../components/menu/overflow-container"
 import BackButton from "../components/buttons/button-back"
 
@@ -23,7 +22,6 @@ const ShowRequest = () =>
     const { sweepstakeId } = useParams();
     const [requests, setRequests] = useState<RequestSample[]>([]);
     const navigate = useNavigate();
-    const participant = useParticipant();
 
     const baseUrl = `/boloes/${sweepstakeId}/`
 
@@ -63,7 +61,7 @@ const ShowRequest = () =>
         <>
             <Header status='logged' />
 
-            <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
+            <MenuLayout navItems={ConfigItems(sweepstakeId)}>
 
                 <OverflowContainer>
                 {

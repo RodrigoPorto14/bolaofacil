@@ -24,7 +24,7 @@ const MenuItemLayout = ({children, to, buttonName, isSweepstake=false} : MenuIte
             </OverflowContainer>
 
             <div className="flex items-center mx-auto gap-4">
-                {/* { !isSweepstake && <BackButton /> } */}
+                { !isSweepstake && <BackButton /> } 
                 <MainButton to={to}> {buttonName} </MainButton>
             </div>
         </>

@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rodri.bolaofacil.components.JwtUtil;
 import com.rodri.bolaofacil.dto.UserDTO;
 import com.rodri.bolaofacil.dto.UserInsertDTO;
+import com.rodri.bolaofacil.dto.UserPasswordUpdateDTO;
 import com.rodri.bolaofacil.enitities.User;
 import com.rodri.bolaofacil.repositories.UserRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
-import com.rodri.bolaofacil.services.exceptions.InvalidTokenException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 
 import io.jsonwebtoken.Claims;
@@ -41,8 +41,6 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	UserRepository userRep;
 	
-	
-	
 	/*****************************************************************
 	                      ENCONTRAR USUARIO                           
 	*****************************************************************/
@@ -61,10 +59,24 @@ public class UserService implements UserDetailsService{
 	@Transactional
 	public UserDTO update(UserDTO dto)
 	{
+		String nickname = dto.getNickname();
+		validateUser("", nickname);
 		User user = authService.authenticated();
-		user.setNickname(dto.getNickname());
+		user.setNickname(nickname);
 		userRep.save(user);
 		return new UserDTO(user);
+	}
+	
+	@Transactional
+	public void updatePassword(UserPasswordUpdateDTO dto)
+	{
+		User user = authService.authenticated();
+		
+		if(!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
+			throw new ResourceNotFoundException("Senha antiga incorreta");
+		
+		user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+		userRep.save(user);
 	}
 	
 	/*****************************************************************
@@ -122,21 +134,12 @@ public class UserService implements UserDetailsService{
 	@Transactional
 	public String passwordRecovery(String email)
 	{
-		System.out.println("===========================================================");
 		User user = userRep.findByEmail(email);
-		System.out.println("===========================================================");
 		
 		if(user == null)
 			throw new ResourceNotFoundException("Email não encontrado");
 		
 		String token = jwtUtil.generatePasswordRecoveryToken(user.getId(), user.getEmail(), 60);
-		return token;
-	}
-	
-	@Transactional
-	public String validateRecoveryToken(String token)
-	{
-		jwtUtil.validateToken(token);
 		return token;
 	}
 	
@@ -148,6 +151,13 @@ public class UserService implements UserDetailsService{
 		User user = userRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
 		user.setPassword(passwordEncoder.encode(newPassword));
 		return "Senha alterada com sucesso";
+	}
+	
+	@Transactional
+	public String validateRecoveryToken(String token)
+	{
+		jwtUtil.validateToken(token);
+		return token;
 	}
 
 	/*****************************************************************

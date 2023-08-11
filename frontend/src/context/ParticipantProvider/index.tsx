@@ -1,10 +1,9 @@
 import { ReactNode, createContext, useState, useEffect } from "react";
-import { IParticipant } from "./types";
+import { IContext, IParticipant } from "./types";
 import { Routes, useParams } from "react-router-dom";
 import { makePrivateRequest } from "../../utils/request";
-import { useAuth } from "../AuthProvider/useAuth";
 
-const ParticipantContext = createContext<IParticipant>({} as IParticipant);
+const ParticipantContext = createContext<IContext>({} as IContext);
 
 const ParticipantProvider = ({ children } : {children : ReactNode}) =>
 {
@@ -23,9 +22,13 @@ const ParticipantProvider = ({ children } : {children : ReactNode}) =>
 
     },[])
 
+    const isCustomTournament = () => participant?.tournament === "PERSONALIZADO";
+    const isOwner = () => participant?.role === "OWNER";
+    const isOwnerOrAdmin = () => isOwner() || participant?.role === "ADMIN";
+
     return(
 
-        <ParticipantContext.Provider value={{...participant}}>
+        <ParticipantContext.Provider value={{...participant, isCustomTournament, isOwner, isOwnerOrAdmin}}>
             <Routes>
                 {children}
             </Routes>

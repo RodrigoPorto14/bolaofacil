@@ -6,11 +6,10 @@ import TeamForm from "../components/forms/team-form";
 import RuleForm from "../components/forms/rule-form";
 import MatchForm from "../components/forms/match-form";
 import { ResourceProps } from "../utils/type";
-import { menuItems, configItems } from "../utils/nav-items";
+import { menuItems, ConfigItems } from "../utils/nav-items";
 import uploadTeamImage from "../utils/upload-request";
 import SweepstakeForm from "../components/forms/sweepstake-form";
 import { previousPath } from "../utils/path-handler";
-import { useParticipant } from "../context/ParticipantProvider/useParticipant";
 import { toast } from 'react-toastify';
 
 const CreateResource = ( { resource } : ResourceProps) =>
@@ -19,10 +18,9 @@ const CreateResource = ( { resource } : ResourceProps) =>
     const { sweepstakeId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const participant = useParticipant();
 
     const url = isSweepstake ? '/boloes' : `/boloes/${sweepstakeId}/${resource}`;
-    const navItems = isSweepstake ? menuItems : configItems(sweepstakeId, participant.role, participant.tournament);
+    const navItems = isSweepstake ? menuItems : ConfigItems(sweepstakeId);
     const buttonName = "CRIAR";
 
     // const uploadAndSubmit = (data : any) =>

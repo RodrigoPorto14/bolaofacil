@@ -1,16 +1,19 @@
+import { useParticipant } from "../context/ParticipantProvider/useParticipant";
+
 export const menuItems = 
 [
     {title: 'Meus Bolões', redirect: '/sweepstakes'},
-    {title: 'Buscar Bolão', redirect: '/search'}
+    {title: 'Buscar Bolão', redirect: '/search'},
+    {title: 'Meu Perfil', redirect: '/user'}
 ]
 
-export const configItems = (sweepstakeId? : string, role? : string, tournament? : string) => 
+export const ConfigItems = (sweepstakeId? : string) => 
 {
-    
     const basePath = `/sweepstakes/${sweepstakeId}`;
-    const isOwner = role === "OWNER";
-    const isOwnerOrAdmin = isOwner || role === "ADMIN";
-    const isCustom = tournament === "PERSONALIZADO"
+    const participant = useParticipant();
+    const isOwner = participant.isOwner();
+    const isOwnerOrAdmin = participant.isOwnerOrAdmin();
+    const isCustom = participant.isCustomTournament();
     const items = []
 
     if(isOwner)

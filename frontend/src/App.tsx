@@ -9,7 +9,7 @@ function App()
 {
   return (
     <>
-      <ToastContainer hideProgressBar />
+      <ToastContainer  />
       <Tooltip className="z-50"id="tooltip"/>
 
       <div className="min-h-screen w-full flex flex-col">

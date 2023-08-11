@@ -65,7 +65,8 @@ public class AuthService {
 		Role participantRole = participant.getRole();
 		
 		for(Role role : roles) 
-			if(participantRole == role) return;
+			if(participantRole == role) 
+				return;
 		
 		throw new ForbiddenException();
 	}
@@ -85,6 +86,5 @@ public class AuthService {
 		participantIsOwnerOrAdmin(sweepstakeId);
 		sweepstakeIsCustom(sweepstakeId);
 	}
-	
 	
 }

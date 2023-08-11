@@ -64,7 +64,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
     
     const matchTypes : ResourceSample[] =
     [
-        {id: 1, name: "SCORE"},
+        {id: 1, name: "PLACAR"},
         {id: 2, name: "MD1"},
         {id: 3, name: "MD3"},
         {id: 4, name: "MD5"}

@@ -12,6 +12,7 @@ import CreateResource from "./pages/create-resource";
 import ConfirmEmail from "./pages/confirm-email";
 import ResetPassword from "./pages/password-reset";
 import RecoveryPassword from "./pages/password-recovery";
+import UpdateUser from "./pages/update-user";
 import Error404 from "./pages/error404";
 import { useAuth } from "./context/AuthProvider/useAuth";
 import { ParticipantProvider } from "./context/ParticipantProvider";
@@ -29,6 +30,7 @@ const Routing = () =>
             userAuthenticated ? 
             <>
                 <Route path='/search' element={<Search />} />
+                <Route path='/user' element={<UpdateUser />} />
                 <Route path='/sweepstakes' element={<ShowResource resource="sweepstakes" />} />
                 <Route path='/sweepstakes/create' element={<CreateResource resource="sweepstakes"/>} />
                 <Route path='/sweepstakes/:sweepstakeId/*' element={<ParticipantProvider>

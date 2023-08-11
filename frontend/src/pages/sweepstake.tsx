@@ -14,8 +14,8 @@ const Sweepstake = () =>
 {
     const location = useLocation();
     const participant = useParticipant();
-    const isOwner = participant.role === "OWNER";
-    const isOwnerOrAdmin = isOwner || participant.role === "ADMIN";
+    const isOwner = participant.isOwner();
+    const isOwnerOrAdmin = participant.isOwnerOrAdmin();
 
     const { sweepstakeId } = useParams();
     const [bets, setBets] = useState<Bet[]>([]);

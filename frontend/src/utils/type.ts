@@ -10,6 +10,7 @@ export type ResourceSample =
     id: number;
     name: string;
     ownerName?: string;
+    startMoment?: string;
 }
 
 export type Sweepstake = 
@@ -52,8 +53,6 @@ export type Match =
 
 }
 
-export type Resource = Sweepstake | Rule | Team | Match ;
-
 export type BetMatch = 
 {
     id : number;
@@ -93,7 +92,7 @@ export type FormProps =
     onDelete? : any;
     buttonName : string;
     create? : boolean;
-    resource? : Resource;
+    resource? : any;
     children?: ReactNode;
 }
 

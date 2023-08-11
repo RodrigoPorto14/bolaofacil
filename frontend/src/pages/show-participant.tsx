@@ -3,13 +3,12 @@ import MenuLayout from "../components/menu/menu-layout"
 import MenuItem from "../components/menu/menu-item"
 import OverflowContainer from "../components/menu/overflow-container"
 import BackButton from "../components/buttons/button-back"
-import { configItems } from "../utils/nav-items"
+import { ConfigItems } from "../utils/nav-items"
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { makePrivateRequest } from "../utils/request"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpLong, faBan, faDownLong } from '@fortawesome/free-solid-svg-icons'
-import { useParticipant } from "../context/ParticipantProvider/useParticipant"
 
 type ParticipantSample = 
 {
@@ -22,7 +21,6 @@ const ShowParticipant = () =>
 {
     const { sweepstakeId } = useParams();
     const [participants, setParticipants] = useState<ParticipantSample[]>([]);
-    const participant = useParticipant();
 
     const baseUrl = `/boloes/${sweepstakeId}/participantes`
 
@@ -74,7 +72,7 @@ const ShowParticipant = () =>
         <>
             <Header status='logged' />
 
-            <MenuLayout navItems={configItems(sweepstakeId, participant.role, participant.tournament)}>
+            <MenuLayout navItems={ConfigItems(sweepstakeId)}>
 
                 <OverflowContainer>
                 {

@@ -1,6 +1,7 @@
 package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 import com.rodri.bolaofacil.enitities.Match;
 
@@ -9,6 +10,7 @@ public class MatchSampleDTO implements Serializable {
 	
 	private Long id;
 	private String name;
+	private Instant startMoment;
 	
 	public MatchSampleDTO() {}
 	
@@ -16,6 +18,7 @@ public class MatchSampleDTO implements Serializable {
 	{
 		this.id = match.getId();
 		this.name = match.getHomeTeam().getName() + " X " + match.getAwayTeam().getName();
+		this.startMoment = match.getStartMoment();
 	}
 
 	public Long getId() {
@@ -25,4 +28,9 @@ public class MatchSampleDTO implements Serializable {
 	public String getName(){
 		return name;
 	}
+
+	public Instant getStartMoment() {
+		return startMoment;
+	}
+	
 }

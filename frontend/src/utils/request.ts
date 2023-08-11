@@ -29,15 +29,15 @@ axios.interceptors.response.use(
       const errorStatus = error.response.status
       if (errorStatus === 401)
       {
-        //removeToken();
-        //history.go(0);
+        removeToken();
+        history.go(0);
       }
       // console.log(error)
-      // if(errorStatus === 403 || (errorStatus === 404 && !error.response.data.message))
-      // {
-      //    history.replace('/404');
-      //    history.go(0);
-      // }
+      if(errorStatus === 403 || (errorStatus === 404 && !error.response.data.message))
+      {
+         history.replace('/404');
+          history.go(0);
+      }
 
       if(errorStatus === 422)
       {

@@ -13,7 +13,7 @@ export const ConfigItems = (sweepstakeId? : string) =>
     const participant = useParticipant();
     const isOwner = participant.isOwner();
     const isOwnerOrAdmin = participant.isOwnerOrAdmin();
-    const isCustom = participant.isCustomTournament();
+    const isCustom = participant.customSweepstake;
     const items = []
 
     if(isOwner)

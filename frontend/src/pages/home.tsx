@@ -1,5 +1,7 @@
 import Header from '../components/header/header'
+import Footer from '../components/footer/footer'
 import MainButton from '../components/buttons/button-main'
+
 
 const Home = () =>
 {
@@ -25,6 +27,8 @@ const Home = () =>
                 </div>
 
             </main>
+
+            {/* <Footer /> */}
 
         </>
             

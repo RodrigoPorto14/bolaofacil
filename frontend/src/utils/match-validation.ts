@@ -1,4 +1,4 @@
-import { Bet } from "./type";
+import { Bet } from "./types";
 import { isPastDate } from "./date-handler";
 
 export const scorableMatch = (homeScore : number|null|undefined, awayScore : number|null|undefined, startMoment : string) =>
@@ -38,8 +38,8 @@ const nullScore = (homeScore : number|null, awayScore : number|null) =>
     homeScore === null && awayScore === null;
 
 const invalidScore = (bet : Bet) =>
-bet.homeTeamScore as number < 0 || bet.homeTeamScore as number > 99 || 
-bet.awayTeamScore as number < 0 || bet.awayTeamScore as number > 99
+    bet.homeTeamScore as number < 0 || bet.homeTeamScore as number > 99 || 
+    bet.awayTeamScore as number < 0 || bet.awayTeamScore as number > 99
 
 export const notChangeBet = (bet : Bet) => 
     bet.homeTeamScore === bet.originalHomeTeamScore && bet.awayTeamScore === bet.originalAwayTeamScore

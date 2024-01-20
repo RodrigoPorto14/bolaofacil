@@ -1,8 +1,8 @@
-import Header from "../components/header/header";
-import MenuLayout from "../components/menu/menu-layout";
-import UserForm from "../components/forms/user-form";
-import PasswordForm from "../components/forms/password-form";
-import { menuItems } from "../utils/nav-items";
+import Header from "../../components/header/header";
+import MenuLayout from "../../components/menu/menu-layout";
+import UserForm from "../../components/forms/user-form";
+import PasswordForm from "../../components/forms/password-form";
+import { menuItems } from "../../utils/nav-items";
 import { useState } from "react";
 
 const UpdateUser = () =>

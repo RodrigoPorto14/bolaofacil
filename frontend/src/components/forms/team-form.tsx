@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FormLayout from './form-layout';
 import Input from "../inputs/input";
-import { FormProps, Team } from '../../utils/type';
+import { FormProps, Team } from '../../utils/types';
 
 const TeamForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : FormProps) =>
 {

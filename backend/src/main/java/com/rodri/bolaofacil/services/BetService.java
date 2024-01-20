@@ -1,5 +1,7 @@
 package com.rodri.bolaofacil.services;
 
+import java.time.Instant;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,13 @@ import com.rodri.bolaofacil.enitities.ExternalBet;
 import com.rodri.bolaofacil.enitities.Match;
 import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.enums.Tournament;
 import com.rodri.bolaofacil.enitities.pk.BetPK;
 import com.rodri.bolaofacil.enitities.pk.ExternalBetPK;
 import com.rodri.bolaofacil.repositories.BetRepository;
 import com.rodri.bolaofacil.repositories.ExternalBetRepository;
 import com.rodri.bolaofacil.repositories.MatchRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
+import com.rodri.bolaofacil.services.exceptions.DataBaseException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -40,58 +42,55 @@ public class BetService {
 	AuthService authService;
 
 	@Transactional
-	public BetInsertDTO insert(Long sweepstakeId, BetInsertDTO dto) 
+	public BetInsertDTO insertOrUpdate(Long sweepstakeId, BetInsertDTO dto) 
 	{
 		Participant participant = authService.validateParticipant(sweepstakeId);
 		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
 		
-		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
+		if(sweepstake.getLeague().isCustom())
 		{
+			Match match = matchRep.findById(dto.getMatchId()).orElseThrow(() -> new ResourceNotFoundException());
+			authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
+			checkMatchAlreadyStarted(match);
 			try
 			{
-				Match match = matchRep.getReferenceById(dto.getMatchId());
-				Bet bet = new Bet(participant.getUser(), sweepstake, match, dto.getHomeTeamScore(), dto.getAwayTeamScore());
-				betRep.save(bet);
-				return new BetInsertDTO(bet);
-			}
-			catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
-			
-		}
-		else
-		{
-			ExternalBet bet = new ExternalBet(participant.getUser(),sweepstake,dto.getMatchId(),dto.getHomeTeamScore(), dto.getAwayTeamScore());
-			externalBetRep.save(bet);
-			return new BetInsertDTO(bet);
-		}	
-	}
-	
-	@Transactional
-	public BetInsertDTO update(Long sweepstakeId, BetInsertDTO dto)
-	{
-		Participant participant = authService.validateParticipant(sweepstakeId);
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
-
-		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
-		{
-			try
-			{
-				Match match = matchRep.getReferenceById(dto.getMatchId());
-				Bet bet = betRep.getReferenceById(new BetPK(participant.getUser(), sweepstake, match));
+				BetPK id = new BetPK(participant.getUser(), sweepstake, match);
+				Bet bet = betRep.findById(id).orElseThrow(() -> new EntityNotFoundException());
 				bet.setHomeTeamScore(dto.getHomeTeamScore());
 				bet.setAwayTeamScore(dto.getAwayTeamScore());
 				betRep.save(bet);
 				return new BetInsertDTO(bet);
 			}
-			catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
-			
+			catch(EntityNotFoundException e) 
+			{ 
+				Bet bet = new Bet(participant.getUser(), sweepstake, match, dto.getHomeTeamScore(), dto.getAwayTeamScore());
+				betRep.save(bet);
+				return new BetInsertDTO(bet);
+			}
 		}
 		else
 		{
-			ExternalBet bet = externalBetRep.getReferenceById(new ExternalBetPK(participant.getUser(), sweepstake, dto.getMatchId()));
-			bet.setHomeTeamScore(dto.getHomeTeamScore());
-			bet.setAwayTeamScore(dto.getAwayTeamScore());
-			externalBetRep.save(bet);
-			return new BetInsertDTO(bet);
+			try
+			{
+				ExternalBetPK id = new ExternalBetPK(participant.getUser(), sweepstake, dto.getMatchId());
+				ExternalBet bet = externalBetRep.findById(id).orElseThrow(() -> new EntityNotFoundException());
+				bet.setHomeTeamScore(dto.getHomeTeamScore());
+				bet.setAwayTeamScore(dto.getAwayTeamScore());
+				externalBetRep.save(bet);
+				return new BetInsertDTO(bet);
+			}
+			catch(EntityNotFoundException e)
+			{
+				ExternalBet bet = new ExternalBet(participant.getUser(),sweepstake,dto.getMatchId(),dto.getHomeTeamScore(), dto.getAwayTeamScore());
+				externalBetRep.save(bet);
+				return new BetInsertDTO(bet);
+			}	
 		}	
+	}
+	
+	private void checkMatchAlreadyStarted(Match match)
+	{
+		if(match.getStartMoment().compareTo(Instant.now()) <= 0)
+			throw new DataBaseException("Essa partida já começou");
 	}
 }

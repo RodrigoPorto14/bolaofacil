@@ -5,7 +5,6 @@ import { makePrivateRequest } from '../../utils/request';
 import { toast } from 'react-toastify';
 import FormLayout from './form-layout';
 import Input from '../inputs/input';
-import { useNavigate } from 'react-router-dom';
 
 const PasswordForm = ({ setIsUserForm } : { setIsUserForm : (b : boolean) => void }) =>
 {
@@ -20,7 +19,6 @@ const PasswordForm = ({ setIsUserForm } : { setIsUserForm : (b : boolean) => voi
     
     type PasswordFormData = z.infer<typeof passwordFormSchema>
     const { register, handleSubmit, formState : { errors } } = useForm<PasswordFormData>({resolver: zodResolver(passwordFormSchema)});
-    const navigate = useNavigate();
 
     const onSubmit = (data : PasswordFormData) => 
     {  
@@ -35,7 +33,7 @@ const PasswordForm = ({ setIsUserForm } : { setIsUserForm : (b : boolean) => voi
 
     return(
 
-        <FormLayout onSubmit={handleSubmit(onSubmit)} buttonName="ATUALIZAR" create={true}>
+        <FormLayout onSubmit={handleSubmit(onSubmit)} buttonName="ATUALIZAR" create={true} backButton={false}>
                              
             <Input<PasswordFormData>
                 label="Senha antiga"

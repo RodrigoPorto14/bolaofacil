@@ -6,7 +6,7 @@ import java.time.Instant;
 import com.rodri.bolaofacil.enitities.Match;
 import com.rodri.bolaofacil.enitities.enums.MatchType;
 
-public class MatchDTO implements Serializable {
+public class MatchDTO implements Serializable, Comparable<MatchDTO> {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -63,4 +63,9 @@ public class MatchDTO implements Serializable {
 	public Integer getAwayTeamScore() {
 		return awayTeamScore;
 	}
+	
+	@Override
+    public int compareTo(MatchDTO other) {
+        return this.startMoment.compareTo(other.startMoment);
+    }
 }

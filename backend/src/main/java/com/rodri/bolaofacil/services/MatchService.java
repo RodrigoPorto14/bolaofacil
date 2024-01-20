@@ -1,11 +1,13 @@
 package com.rodri.bolaofacil.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +58,7 @@ public class MatchService {
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Match> matches = matchRep.findAllBySweepstakeOrderByStartMoment(sweepstake);
-			return matches.stream().map( match -> new MatchSampleDTO(match)).toList();
+			return matches.stream().map( match -> new MatchSampleDTO(match)).collect(Collectors.toList());
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
@@ -94,14 +96,13 @@ public class MatchService {
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
-			//Match match = matchRep.getReferenceById(id);
 			Match match = matchRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
 			authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
 			matchRep.delete(match);
 		}
+		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException();}
 		catch(DataIntegrityViolationException e) 
 		{
 			throw new DataBaseException("Não foi possível deletar pois existem palpites nessa partida");
@@ -110,7 +111,7 @@ public class MatchService {
 	
 	private void copyInsertDtoToEntity(Match entity, MatchInsertDTO dto)
 	{
-		Long id = dto.getRuleId();;
+		Long id = dto.getRuleId();
 		try
 		{
 			entity.setRule(ruleRep.getReferenceById(id));

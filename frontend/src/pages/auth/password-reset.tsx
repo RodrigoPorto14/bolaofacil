@@ -1,13 +1,13 @@
-import Header from '../components/header/header'
-import Input from '../components/inputs/input';
-import AuthFormLayout from '../components/auth/auth-form-layout'
+import Header from '../../components/header/header'
+import Input from '../../components/inputs/input';
+import AuthFormLayout from '../../components/auth/auth-form-layout'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { makeRequest } from '../utils/request';
+import { makeRequest } from '../../utils/request';
 
 const resetPasswordFormSchema = z.object(
 {

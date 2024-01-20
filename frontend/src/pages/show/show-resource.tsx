@@ -1,22 +1,23 @@
-import Header from "../components/header/header"
-import MenuLayout from "../components/menu/menu-layout"
-import MenuItemLayout from "../components/menu/menu-item-layout"
-import OwnerIcon from "../components/sweepstake/owner-icon"
-import { menuItems, ConfigItems } from "../utils/nav-items"
+import Header from "../../components/header/header"
+import MenuLayout from "../../components/menu/menu-layout"
+import MenuItemLayout from "../../components/menu/menu-item-layout"
+import OwnerIcon from "../../components/sweepstake/owner-icon"
+import { menuItems, ConfigItems } from "../../utils/nav-items"
 import { useParams, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { makePrivateRequest } from "../utils/request"
-import MenuItem from "../components/menu/menu-item"
-import { ResourceProps, ResourceSample } from "../utils/type"
-import { toBrDate } from "../utils/date-handler"
+import { makePrivateRequest } from "../../utils/request"
+import MenuItem from "../../components/menu/menu-item"
+import { ResourceProps, ResourceSample } from "../../utils/types"
+import { toBrFormatDate } from "../../utils/date-handler"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
+import { _isMatch, _isSweepstake } from "../../utils/enums"
 
 const ShowResource = ({ resource } : ResourceProps) =>
 {
 
-    const isSweepstake = resource === "sweepstakes";
-    const isMatch = resource === "partidas";
+    const isSweepstake = _isSweepstake(resource);
+    const isMatch = _isMatch(resource);
     const { sweepstakeId } = useParams();
     const [resources, setResources] = useState<ResourceSample[]>([]);
     const location = useLocation()
@@ -32,7 +33,6 @@ const ShowResource = ({ resource } : ResourceProps) =>
         makePrivateRequest( { url } )
             .then((response) =>
             {
-                console.log(response.data)
                 setResources(response.data)
             })
             .catch((error) => console.log(error))
@@ -59,12 +59,12 @@ const ShowResource = ({ resource } : ResourceProps) =>
                                 { 
                                     isMatch && 
                                     <>
-                                        <p className="hidden md:block"> {toBrDate(resource.startMoment as string)} </p> 
+                                        <p className="hidden md:block"> {toBrFormatDate(resource.startMoment as string)} </p> 
                                         <FontAwesomeIcon 
                                             className="md:hidden" 
                                             icon={faCalendar}
                                             data-tooltip-id="tooltip" 
-                                            data-tooltip-content={toBrDate(resource.startMoment as string)}
+                                            data-tooltip-content={toBrFormatDate(resource.startMoment as string)}
                                         />
                                     </>
                                 }

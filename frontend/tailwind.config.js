@@ -13,11 +13,11 @@ module.exports =
       {
         brand: 
         {
-          100: '#8ec1c2',
-          200: '#04bf8a',
-          300: '#03a64a',
-          400: '#025940',
-          500: '#018c65',
+          100: '#8ec1c2', // fundo menu
+          200: '#04bf8a', // destaque
+          300: '#03a64a', // fundo botões
+          400: '#025940', // hover botões
+          500: '#018c65', // hover nav menu
         }
       },
 

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rodri.bolaofacil.dto.SweepstakeDTO;
+import com.rodri.bolaofacil.enitities.League;
 import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.User;
 import com.rodri.bolaofacil.enitities.enums.Role;
+import com.rodri.bolaofacil.repositories.LeagueRepository;
 import com.rodri.bolaofacil.repositories.ParticipantRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
@@ -26,6 +28,9 @@ public class SweepstakeService {
 	
 	@Autowired
 	ParticipantRepository participantRep;
+	
+	@Autowired
+	LeagueRepository leagueRep;
 	
 	@Autowired
 	AuthService authService;
@@ -56,11 +61,16 @@ public class SweepstakeService {
 	public SweepstakeDTO insert(SweepstakeDTO dto)
 	{
 		User user = authService.authenticated();
-		Sweepstake sweepstake = copyDtoToEntity(new Sweepstake(), dto);
-		sweepstake.setTournament(dto.getTournament());
-		sweepstakeRep.save(sweepstake);
-		participantRep.save(new Participant(user,sweepstake,Role.OWNER,Instant.now()));
-		return new SweepstakeDTO(sweepstake);
+		try
+		{
+			League league = leagueRep.getReferenceById(dto.getLeagueId());
+			Sweepstake sweepstake = copyDtoToEntity(new Sweepstake(), dto);
+			sweepstake.setLeague(league);
+			sweepstakeRep.save(sweepstake);
+			participantRep.save(new Participant(user,sweepstake,Role.OWNER,Instant.now()));
+			return new SweepstakeDTO(sweepstake);
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
 	@Transactional

@@ -1,6 +1,7 @@
 package com.rodri.bolaofacil.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -48,7 +49,7 @@ public class RuleService {
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Rule> rules = ruleRep.findAllBySweepstake(sweepstake);
-			return rules.stream().map( rule -> new RuleSampleDTO(rule)).toList();
+			return rules.stream().map( rule -> new RuleSampleDTO(rule)).collect(Collectors.toList());
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
@@ -85,10 +86,8 @@ public class RuleService {
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
-			//Rule rule = ruleRep.getReferenceById(id);
 			Rule rule = ruleRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
 			authService.resourceBelongsSweepstake(rule.getSweepstake().getId(), sweepstakeId);
 			ruleRep.delete(rule);

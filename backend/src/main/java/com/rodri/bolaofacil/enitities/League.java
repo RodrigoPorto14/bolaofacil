@@ -4,17 +4,14 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tb_sweepstake")
-public class Sweepstake implements Serializable {
+@Table(name = "tb_league")
+public class League implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -22,52 +19,57 @@ public class Sweepstake implements Serializable {
 	private Long id;
 	
 	private String name;
-	private boolean isPrivate;
+	private String endpoint;
+	private boolean isCustom;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "league_id")
-	private League league;
-	
-	public Sweepstake() {}
-	
-	public Sweepstake(Long id, String name, boolean isPrivate, User owner, League league) {
+	public League() {}
+
+	public League(Long id, String name, String endpoint, boolean isCustom) {
 		this.id = id;
 		this.name = name;
-		this.isPrivate = isPrivate;
-		this.league = league;
+		this.endpoint = endpoint;
+		this.isCustom = isCustom;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public boolean isPrivate() {
-		return isPrivate;
+
+	public String getEndpoint() {
+		return endpoint;
 	}
 
-	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
+
+	public boolean isCustom() {
+		return isCustom;
 	}
 
-	public League getLeague() {
-		return league;
+
+	public void setCustom(boolean isCustom) {
+		this.isCustom = isCustom;
 	}
 
-	public void setLeague(League league) {
-		this.league = league;
+
+	public void setApi(String endpoint) {
+		this.endpoint = endpoint;
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -82,7 +84,7 @@ public class Sweepstake implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Sweepstake other = (Sweepstake) obj;
+		League other = (League) obj;
 		return Objects.equals(id, other.id);
 	}
 }

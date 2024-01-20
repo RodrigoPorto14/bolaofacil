@@ -1,24 +1,24 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom"
-import Header from "../components/header/header";
-import MenuLayout from "../components/menu/menu-layout";
-import { makePrivateRequest } from "../utils/request";
-import TeamForm from "../components/forms/team-form";
-import RuleForm from "../components/forms/rule-form";
-import MatchForm from "../components/forms/match-form";
-import { ResourceProps } from "../utils/type";
-import { menuItems, ConfigItems } from "../utils/nav-items";
-import uploadTeamImage from "../utils/upload-request";
-import SweepstakeForm from "../components/forms/sweepstake-form";
-import { previousPath } from "../utils/path-handler";
+import Header from "../../components/header/header";
+import MenuLayout from "../../components/menu/menu-layout";
+import { makePrivateRequest } from "../../utils/request";
+import TeamForm from "../../components/forms/team-form";
+import RuleForm from "../../components/forms/rule-form";
+import MatchForm from "../../components/forms/match-form";
+import { ResourceProps } from "../../utils/types";
+import { menuItems, ConfigItems } from "../../utils/nav-items";
+import uploadTeamImage from "../../utils/upload-request";
+import SweepstakeForm from "../../components/forms/sweepstake-form";
+import { previousPath } from "../../utils/path-handler";
 import { toast } from 'react-toastify';
+import { _isMatch, _isRule, _isSweepstake, _isTeam } from "../../utils/enums";
 
 const CreateResource = ( { resource } : ResourceProps) =>
 {
-    const isSweepstake = resource === "sweepstakes";
+    const isSweepstake = _isSweepstake(resource);
     const { sweepstakeId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-
     const url = isSweepstake ? '/boloes' : `/boloes/${sweepstakeId}/${resource}`;
     const navItems = isSweepstake ? menuItems : ConfigItems(sweepstakeId);
     const buttonName = "CRIAR";
@@ -49,10 +49,10 @@ const CreateResource = ( { resource } : ResourceProps) =>
             <MenuLayout navItems={navItems}>
 
             { 
-                resource === 'sweepstakes' ? ( <SweepstakeForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
-                resource === 'regras' ? ( <RuleForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :   
-                resource === 'times' ? ( <TeamForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
-                resource === 'partidas' ? ( <MatchForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
+                isSweepstake ? ( <SweepstakeForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
+                _isRule(resource) ? ( <RuleForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :   
+                _isTeam(resource) ? ( <TeamForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
+                _isMatch(resource) ? ( <MatchForm onSubmit={onSubmit} buttonName={buttonName} create={true} /> ) :
                 <></>
             }
 

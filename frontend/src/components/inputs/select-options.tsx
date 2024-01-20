@@ -1,4 +1,4 @@
-import { ResourceSample } from "../../utils/type";
+import { ResourceSample } from "../../utils/types";
 import ErrorMessage from "./error-message";
 
 type SelectOptionsProps<T> = 

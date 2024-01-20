@@ -11,10 +11,10 @@ export type LoginData =
   password: String;
 }
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'bolaofacil';
-const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? '140301ro';
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
-export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL ?? 'http://localhost:3000';
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
 
 /****************************************************************** 
 Intercepta requisições axios, caso essa requisição tenha sucesso,
@@ -32,11 +32,11 @@ axios.interceptors.response.use(
         removeToken();
         history.go(0);
       }
-      // console.log(error)
+
       if(errorStatus === 403 || (errorStatus === 404 && !error.response.data.message))
       {
          history.replace('/404');
-          history.go(0);
+         history.go(0);
       }
 
       if(errorStatus === 422)

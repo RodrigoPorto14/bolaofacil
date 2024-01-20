@@ -4,9 +4,9 @@ import MenuItem from "../components/menu/menu-item"
 import OverflowContainer from "../components/menu/overflow-container"
 import OwnerIcon from "../components/sweepstake/owner-icon"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faLock, faLockOpen, faRightFromBracket, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faLock, faLockOpen, faRightFromBracket, faEnvelope, faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons'
 import { menuItems } from "../utils/nav-items"
-import { Sweepstake } from '../utils/type'
+import { Sweepstake } from '../utils/types'
 import { useState } from "react"
 import { makePrivateRequest } from "../utils/request"
 import { useNavigate } from "react-router-dom"
@@ -102,13 +102,12 @@ const Search = () =>
                                         <OwnerIcon ownerName={sweepstake.ownerName} />
                                         { 
                                             sweepstake.private_ ? 
-
                                             <FontAwesomeIcon 
-                                                className="text-xl hover:text-brand-200 hover:cursor-pointer"
-                                                icon={faEnvelope}
-                                                onClick={() => onRequest(sweepstake.id)}
+                                                className={`text-xl ${sweepstake.hasRequest ? "" : "hover:text-brand-200 hover:cursor-pointer"}`}
+                                                icon={sweepstake.hasRequest ? faEnvelopeCircleCheck : faEnvelope}
+                                                onClick={sweepstake.hasRequest ? undefined : () => onRequest(sweepstake.id)}
                                                 data-tooltip-id="tooltip" 
-                                                data-tooltip-content="Pedir para entrar"
+                                                data-tooltip-content={sweepstake.hasRequest ? "Pedido enviado" : "Pedir para entrar"}
                                             />
 
                                             : 

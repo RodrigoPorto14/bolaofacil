@@ -1,4 +1,4 @@
-package com.rodri.sweepstakemanager;
+package com.rodri.bolaofacil;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

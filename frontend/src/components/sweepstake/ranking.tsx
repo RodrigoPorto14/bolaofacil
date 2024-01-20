@@ -1,4 +1,4 @@
-import { RankingHeader } from "../../utils/type";
+import { RankingHeader } from "../../utils/types";
 
 type RankingProps = 
 {
@@ -8,22 +8,22 @@ type RankingProps =
 const Ranking = ({ ranking } : RankingProps) =>
 {
 
-    const border = "border-2 border-black h-4";
-    const headerCellClass = `w-12 ${border}`
+    const border = "border-2 border-black";
+    const headerCellClass = `w-12 ${border}`;
 
     return(
-
-        <table className={border} >
+        <div className="max-h-[500px] overflow-y-auto">
+            <table className={border}>
             <thead>
                 <tr className="bg-brand-200 text-white">
-                    <th className={headerCellClass} >POS</th>
-                    <th className={`w-56 h-4 ${border}`}>JOGADOR</th>
-                    <th className={headerCellClass}>PTS</th>
-                    <th className={headerCellClass}>PE</th>
-                    <th className={headerCellClass}>PV</th>
-                    <th className={headerCellClass}>DP</th>
-                    <th className={headerCellClass}>PP</th>
-                    <th className={headerCellClass}>VE</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Posição" >POS</th>
+                    <th className={`w-56 ${border}`} data-tooltip-id="tooltip" data-tooltip-content="Jogador" >JOGADOR</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Pontos">PTS</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Placar Exato">PE</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Placar do Vencedor">PV</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Diferença do Placar">DP</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Placar do Perdedor">PP</th>
+                    <th className={headerCellClass} data-tooltip-id="tooltip" data-tooltip-content="Vencedor">VE</th>
                 </tr>
             </thead>
 
@@ -49,6 +49,8 @@ const Ranking = ({ ranking } : RankingProps) =>
 
             </tbody>
         </table>
+        </div>
+        
     )
 }
 

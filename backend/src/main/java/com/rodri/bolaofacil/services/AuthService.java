@@ -9,7 +9,6 @@ import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.User;
 import com.rodri.bolaofacil.enitities.enums.Role;
-import com.rodri.bolaofacil.enitities.enums.Tournament;
 import com.rodri.bolaofacil.enitities.pk.ParticipantPK;
 import com.rodri.bolaofacil.repositories.ParticipantRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
@@ -41,12 +40,13 @@ public class AuthService {
 		catch(Exception e) { throw new UnauthorizedException(); }
 	}
 	
+	@Transactional
 	private void sweepstakeIsCustom(Long sweepstakeId)
 	{
 		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId)
 											 .orElseThrow(() -> new ResourceNotFoundException());
 		
-		if(sweepstake.getTournament() != Tournament.PERSONALIZADO)
+		if(!sweepstake.getLeague().isCustom())
 			throw new ForbiddenException();
 	}
 	

@@ -5,18 +5,19 @@ import FormLayout from './form-layout';
 import { useState, useEffect } from 'react';
 import { makePrivateRequest } from '../../utils/request';
 import SelectOptions from '../inputs/select-options';
-import { Match, ResourceSample, FormProps } from '../../utils/type';
+import { Match, ResourceSample, FormProps } from '../../utils/types';
 import { useParams } from 'react-router-dom';
 import Input from '../inputs/input';
 import InputNumber from '../inputs/input-number';
 import { matchValidation, scorableMatch } from '../../utils/match-validation';
+import { toGlobalDate, toLocalDate } from '../../utils/date-handler';
 
 const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormProps) =>
 {
 
     const numberValidation = z.number()
                               .min(0,'Deve ser maior ou igual a 0')
-                              
+                              .max(99, 'Deve ser menor ou igual a 99')
                               .nullable()
                               .optional()
                               
@@ -31,7 +32,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
     
         startMoment : z.string()
                        .nonempty('Campo obrigatório')
-                       .transform(value => value + ':00Z'),
+                       .transform(value => toGlobalDate(value)),
     
         homeTeamId : z.string()
                       .nonempty('Campo Obrigatório')
@@ -77,14 +78,14 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
             {
                 setRules(response.data)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {})
         
         makePrivateRequest( {url: `/boloes/${sweepstakeId}/times`} )
             .then((response) =>
             {
                 setTeams(response.data)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {})
 
     },[sweepstakeId])
 
@@ -119,7 +120,7 @@ const MatchForm = ({ onSubmit, buttonName, resource, onDelete, create } : FormPr
                 register={register}
                 errors={errors}
                 width="w-52"
-                defaultValue={(resource as Match)?.startMoment.slice(0,-4)}
+                defaultValue={toLocalDate((resource as Match)?.startMoment)}
             />
 
             <div className="flex gap-3">

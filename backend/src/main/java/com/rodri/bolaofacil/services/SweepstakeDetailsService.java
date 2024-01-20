@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,6 @@ import com.rodri.bolaofacil.enitities.ExternalBet;
 import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.enums.Tournament;
 import com.rodri.bolaofacil.repositories.BetRepository;
 import com.rodri.bolaofacil.repositories.ExternalBetRepository;
 import com.rodri.bolaofacil.repositories.MatchRepository;
@@ -49,7 +50,7 @@ public class SweepstakeDetailsService {
 	MatchRepository matchRep;
 	
 	@Autowired
-	LeaguesService leaguesService;
+	LeagueService leagueService;
 	
 	@Autowired
 	AuthService authService;
@@ -63,7 +64,7 @@ public class SweepstakeDetailsService {
 		matchRep.findAllBySweepstakeOrderByStartMoment(sweepstake);
 		int SIZE = 5;
 		
-		if(sweepstake.getTournament() == Tournament.PERSONALIZADO)
+		if(sweepstake.getLeague().isCustom())
 			 return findDetails(participant, sweepstake, page, SIZE);
 		
 		return findExternalDetails(participant, sweepstake, page, SIZE);	 
@@ -77,7 +78,7 @@ public class SweepstakeDetailsService {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<BetDTO> pagedBets = betRep.findAllMatchBySweepstakeWithParticipantBet(sweepstake, participant.getUser(), pageable);
 		
-		List<BetDTO> bets = betRep.findAllBySweepstake(sweepstake).stream().map(bet -> new BetDTO(bet)).toList();
+		List<BetDTO> bets = betRep.findAllBySweepstake(sweepstake).stream().map(bet -> new BetDTO(bet)).collect(Collectors.toList());
 		List<CompetitorDTO> ranking = generateRanking(bets, sweepstake);
 		
 		return new SweepstakeDetailsDTO(pagedBets, ranking);
@@ -85,34 +86,37 @@ public class SweepstakeDetailsService {
 	
 	private SweepstakeDetailsDTO findExternalDetails(Participant participant, Sweepstake sweepstake, Integer page, int size)
 	{
-		User user = participant.getUser();
-		List<MatchDTO> matches = leaguesService.findCBLOLMatches(sweepstake, user, page, size);
+		String leagueEndpoint = sweepstake.getLeague().getEndpoint();
+		List<MatchDTO> matches = leagueService.getMatches(leagueEndpoint);
+		
+		Collections.sort(matches);
 		
 		if(page == null)
-			page = matchesBeforeNow(matches)/size;
+			page = nextMatchIndex(matches) / size;
 		
-		List<BetDTO> bets = leaguesService.toBetsDTO(matches, sweepstake, user);
-		Page<BetDTO> pagedBets = leaguesService.toPaged(bets, page, size);
+		User user = participant.getUser();
+		List<BetDTO> bets = toBetsDTO(matches, sweepstake, user);
+		Page<BetDTO> pagedBets = toPaged(bets, page, size);
 		
 		List<ExternalBet> externalBets = externalBetRep.findAllBySweepstake(sweepstake);
-		bets = externalBets.stream().map(externalBet -> externalBetToBetDto(externalBet, matches)).toList();
+		bets = externalBets.stream().map(externalBet -> externalBetToBetDto(externalBet, matches)).collect(Collectors.toList());
 		List<CompetitorDTO> ranking = generateRanking(bets, sweepstake);
 		
 		return new SweepstakeDetailsDTO(pagedBets, ranking);
 	}
 	
-	private Integer matchesBeforeNow(List<MatchDTO> matches)
+	private int nextMatchIndex(List<MatchDTO> matches)
 	{
 		Instant now = Instant.now();
-		int matchesBeforeNow = 0;
+		int i;
 
-		for(int i = 0; i < matches.size() ; i++)
+		for(i = 0; i < matches.size() ; i++)
 		{
-			if(matches.get(i).getStartMoment().compareTo(now) < 0)
-				matchesBeforeNow++;
+			if(matches.get(i).getStartMoment().compareTo(now) > 0)
+				return i;
 		}
 		
-		return matchesBeforeNow;
+		return --i;
 	}
 	
 	private BetDTO externalBetToBetDto(ExternalBet bet, List<MatchDTO> matches)
@@ -125,13 +129,53 @@ public class SweepstakeDetailsService {
 		return null;
 	}
 	
+	private List<BetDTO> toBetsDTO(List<MatchDTO> matches, Sweepstake sweepstake, User user)
+	{
+		List<ExternalBet> bets = externalBetRep.findAllByParticipant(sweepstake, user);
+		return matches.stream().map(match -> toBetDTO(match,bets)).collect(Collectors.toList());
+	}
+	
+	private BetDTO toBetDTO(MatchDTO match, List<ExternalBet> bets)
+	{
+		for(ExternalBet bet : bets)
+		{
+			if(match.getId().equals(bet.getExternalMatchId()))
+				return new BetDTO(match, bet.getHomeTeamScore(), bet.getAwayTeamScore());	
+		}
+		
+		return new BetDTO(match, null, null);
+	}
+	
+	private Page<BetDTO> toPaged(List<BetDTO> bets, Integer page, int size)
+	{
+        int qtdMatches = bets.size();
+
+        if (page == null)
+            page = 0;
+
+        if (page < 0 || page > qtdMatches / size)
+            throw new IllegalArgumentException("Número da página inválido.");
+
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, qtdMatches);
+
+        bets = (fromIndex < toIndex) ? bets.subList(fromIndex, toIndex) : Collections.emptyList();
+        
+        Pageable pageable = PageRequest.of(page, size);
+        return new PageImpl<>(bets, pageable, qtdMatches);
+	}
+	
 	private List<CompetitorDTO> generateRanking(List<BetDTO> bets, Sweepstake sweepstake)
 	{
 		List<Participant> participants = participantRep.findAllBySweepstake(sweepstake);
 		HashMap<Long, CompetitorDTO> competitors = createCompetitors(participants);
 		
 		for(BetDTO bet : bets)
-			updateCompetitor(bet, competitors.get(bet.getUserId()));
+		{
+			Long userId = bet.getUserId();
+			if(competitors.containsKey(userId))
+				updateCompetitor(bet, competitors.get(userId));
+		}
 		
 		List<CompetitorDTO> ranking = new ArrayList<>(competitors.values());
 		Collections.sort(ranking);

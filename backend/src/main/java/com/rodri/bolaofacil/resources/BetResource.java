@@ -22,17 +22,9 @@ public class BetResource {
 	@Autowired
 	BetService service;
 	
-	@PostMapping()
-	public ResponseEntity<BetInsertDTO> insert(@PathVariable Long sweepstakeId, @RequestBody BetInsertDTO dto)
+	@PostMapping
+	public ResponseEntity<BetInsertDTO> insertOrUpdate(@PathVariable Long sweepstakeId, @RequestBody BetInsertDTO dto)
 	{
-		dto = service.insert(sweepstakeId, dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getMatchId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
-	}
-	
-	@PutMapping()
-	public ResponseEntity<BetInsertDTO> update(@PathVariable Long sweepstakeId, @RequestBody BetInsertDTO dto)
-	{
-		return ResponseEntity.ok().body(service.update(sweepstakeId, dto));
+		return ResponseEntity.ok().body(service.insertOrUpdate(sweepstakeId, dto));
 	}
 }

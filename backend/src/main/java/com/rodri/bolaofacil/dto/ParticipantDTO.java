@@ -1,30 +1,31 @@
 package com.rodri.bolaofacil.dto;
 
 import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.enums.Tournament;
+import com.rodri.bolaofacil.enitities.Sweepstake;
 
 public class ParticipantDTO extends ParticipantUpdateDTO
 {
 	private static final long serialVersionUID = 1L;
 	
 	private String sweepstakeName;
-	private Tournament tournament;
+	private boolean isCustom;
 	
 	public ParticipantDTO() {}
 	
 	public ParticipantDTO(Participant entity)
 	{
 		super(entity);
-		sweepstakeName = entity.getSweepstake().getName();
-		tournament = entity.getSweepstake().getTournament();
+		Sweepstake sweepstake = entity.getSweepstake();
+		sweepstakeName = sweepstake.getName();
+		isCustom = sweepstake.getLeague().isCustom();
 	}
 
 	public String getSweepstakeName() {
 		return sweepstakeName;
 	}
 
-	public Tournament getTournament() {
-		return tournament;
+	public boolean isCustom() {
+		return isCustom;
 	}
 	
 }

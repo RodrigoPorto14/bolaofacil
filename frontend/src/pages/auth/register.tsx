@@ -1,12 +1,12 @@
-import Header from '../components/header/header'
-import Input from '../components/inputs/input';
-import AuthFormLayout from '../components/auth/auth-form-layout'
+import Header from '../../components/header/header'
+import Input from '../../components/inputs/input';
+import AuthFormLayout from '../../components/auth/auth-form-layout'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { makeRequest } from '../utils/request';
+import { makeRequest } from '../../utils/request';
 import { useNavigate } from 'react-router-dom';
-import { FRONTEND_URL } from '../utils/request';
+import { FRONTEND_URL } from '../../utils/request';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 

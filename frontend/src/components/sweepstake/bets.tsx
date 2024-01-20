@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from 'react'
-import { Bet } from '../../utils/type'
+import { Bet } from '../../utils/types'
 import { makePrivateRequest } from '../../utils/request'
 import { useParams } from 'react-router-dom'
 import { ChangeEvent } from 'react'
 import MainButton from '../buttons/button-main'
-import { isPastDate, toBrDate } from '../../utils/date-handler'
+import { isPastDate, toBrFormatDate } from '../../utils/date-handler'
 import { notChangeBet, invalidBet } from '../../utils/match-validation'
+import { toast } from 'react-toastify'
 
 type BetsProps =
 {
@@ -23,18 +23,28 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
     const {sweepstakeId} = useParams();
 
-    const sendBets = (bet : Bet, method : string) =>
+    const sendBets = async (bet : Bet, bets : Bet[]) =>
     {
-        bet.originalHomeTeamScore = bet.homeTeamScore;
-        bet.originalAwayTeamScore = bet.awayTeamScore;
-        bet.error = false;
+        
         const data = {matchId: bet.match.id, homeTeamScore: bet.homeTeamScore, awayTeamScore: bet.awayTeamScore};
-        makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method})
-            .then()
-            .catch(error => console.log(error))
+        await makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method : 'POST'})
+            .then(response =>
+            {
+                bet.originalHomeTeamScore = bet.homeTeamScore;
+                bet.originalAwayTeamScore = bet.awayTeamScore;
+                bet.error = false;
+                setBets(bets)
+            })
+            .catch(error => 
+            {
+                toast.error(error.response.data.message);
+                bet.homeTeamScore = bet.originalHomeTeamScore;
+                bet.awayTeamScore = bet.originalAwayTeamScore;
+                setBets(bets)
+            })
     }
 
-    const onSaveBets = () =>
+    const onSaveBets = async () =>
     {
         const updatedValues = [...bets];
         for(const bet of updatedValues)
@@ -45,13 +55,21 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
             if(invalidBet(bet))
             {
                 bet.error = true;
+                setBets(updatedValues)
                 continue;
             }
 
-            const method = bet.originalHomeTeamScore ? 'PUT' : 'POST';
-            sendBets(bet,method)   
+            if(isPastDate(bet.match.startMoment))
+            {
+                bet.homeTeamScore = bet.originalHomeTeamScore;
+                bet.awayTeamScore = bet.originalAwayTeamScore;
+                setBets(updatedValues)
+                continue;
+            }
+
+            await sendBets(bet, updatedValues);   
         }
-        setBets(updatedValues);
+        
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>, index: number, isHomeScore : boolean): void => 
@@ -100,7 +118,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
                 <div className="relative flex bg-brand-200 px-4 text-white font-title justify-center">
                     
                     {
-                        pageNumber>0 &&
+                        pageNumber > 0 &&
                         <FontAwesomeIcon 
                             className={`${arrowsClass} left-2`}
                             icon={faCaretLeft}
@@ -126,7 +144,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
                             {betStatus(bet)}
 
-                            <div> {toBrDate(bet.match.startMoment)} </div>
+                            <div> {toBrFormatDate(bet.match.startMoment)} </div>
 
                             <div className="flex w-full items-center gap-3">
 

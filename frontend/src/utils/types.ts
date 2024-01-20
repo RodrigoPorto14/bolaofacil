@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
+import { Resource } from "./enums";
 
 export type ResourceProps = 
 {
-    resource: string;
+    resource: Resource;
 }
 
 export type ResourceSample =
@@ -20,6 +21,7 @@ export type Sweepstake =
     tournament : string;
     private_ : boolean;
     ownerName : string;
+    hasRequest : boolean;
 }
 
 export type Rule = 
@@ -50,10 +52,9 @@ export type Match =
     awayTeamId: number;
     homeTeamScore: number;
     awayTeamScore: number;
-
 }
 
-export type BetMatch = 
+type BetMatch = 
 {
     id : number;
     type: string;
@@ -94,5 +95,6 @@ export type FormProps =
     create? : boolean;
     resource? : any;
     children?: ReactNode;
+    backButton?: boolean;
 }
 

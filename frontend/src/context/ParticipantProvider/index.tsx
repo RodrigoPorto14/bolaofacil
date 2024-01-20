@@ -16,19 +16,18 @@ const ParticipantProvider = ({ children } : {children : ReactNode}) =>
             .then(response =>
             {
                 const data = response.data;
-                setParticipant({sweepstakeName: data.sweepstakeName, tournament: data.tournament, role: data.role })
+                setParticipant({sweepstakeName: data.sweepstakeName, customSweepstake: data.custom, role: data.role })
             })
             .catch(error => console.log(error))
 
     },[])
 
-    const isCustomTournament = () => participant?.tournament === "PERSONALIZADO";
     const isOwner = () => participant?.role === "OWNER";
     const isOwnerOrAdmin = () => isOwner() || participant?.role === "ADMIN";
 
     return(
 
-        <ParticipantContext.Provider value={{...participant, isCustomTournament, isOwner, isOwnerOrAdmin}}>
+        <ParticipantContext.Provider value={{...participant, isOwner, isOwnerOrAdmin}}>
             <Routes>
                 {children}
             </Routes>

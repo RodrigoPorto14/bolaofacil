@@ -2,6 +2,7 @@ package com.rodri.bolaofacil.services;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -41,12 +42,14 @@ public class ParticipantService {
 	@Autowired
 	AuthService authService;
 	
-	@Transactional(readOnly=true)
+	@Transactional
 	public ParticipantDTO findAuthenticatedBySweepstake(Long sweepstakeId)
 	{
 		try
 		{
 			Participant participant = authService.validateParticipant(sweepstakeId);
+			participant.setLastAccess(Instant.now());
+			participantRep.save(participant);
 			return new ParticipantDTO(participant);
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
@@ -60,7 +63,7 @@ public class ParticipantService {
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Participant> participants = participantRep.findAllBySweepstakeExceptOwner(sweepstake);
-			return participants.stream().map(participant -> new ParticipantSampleDTO(participant)).toList();
+			return participants.stream().map(participant -> new ParticipantSampleDTO(participant)).collect(Collectors.toList());
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
@@ -123,10 +126,4 @@ public class ParticipantService {
 		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException();}
 		catch(DataIntegrityViolationException e) {throw new DataBaseException();}
 	}
-
-	
-
-	
-
-	
 }

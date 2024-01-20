@@ -3,9 +3,11 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FormLayout from './form-layout';
 import Input from "../inputs/input";
-import { FormProps, Sweepstake } from '../../utils/type';
-import { ResourceSample } from '../../utils/type';
+import { FormProps, Sweepstake } from '../../utils/types';
+import { ResourceSample } from '../../utils/types';
 import SelectOptions from '../inputs/select-options';
+import { useEffect, useState } from 'react';
+import { makePrivateRequest } from '../../utils/request';
 
 const SweepstakeForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : FormProps) =>
 {
@@ -15,22 +17,27 @@ const SweepstakeForm = ({ onSubmit, buttonName, resource, onDelete, create=false
                 .min(4, 'Deve conter no mínimo 4 caracteres')
                 .max(25, 'Deve conter no máximo 25 caracteres'),
 
-        tournament: z.string()
-                     .optional(),
+        leagueId: z.string().transform(value => Number(value)),
         
-        private_: z.string()
-                   .transform(value => value === "true")
+        private_: z.string().transform(value => value === "true")
     })
     
     type SweepstakeFormData = z.infer<typeof sweepstakeFormSchema>
 
     const { register, handleSubmit, formState : { errors } } = useForm<SweepstakeFormData>({resolver: zodResolver(sweepstakeFormSchema)});
 
-    const tournaments: ResourceSample[] =
-    [
-        {id: 1, name: "PERSONALIZADO"},
-        {id: 2, name: "CBLOL"}
-    ]
+    const [leagues, setLeagues] = useState<ResourceSample[]>();
+
+    useEffect(() =>
+    {
+        makePrivateRequest( { url: '/leagues' } )
+            .then((response) =>
+            {
+                setLeagues(response.data)
+            })
+            .catch((error) => console.log(error))
+
+    },[])
 
     return(
 
@@ -46,14 +53,14 @@ const SweepstakeForm = ({ onSubmit, buttonName, resource, onDelete, create=false
             />
 
             { 
-                create &&
+                (create && leagues) &&
                 <SelectOptions<SweepstakeFormData>
                     label="Torneio"
-                    name="tournament"
-                    resources={tournaments}
+                    name="leagueId"
+                    resources={leagues}
                     register={register}
                     errors={errors}
-                    value="name"
+                    value="id"
                     defaultValue={(resource as Sweepstake)?.tournament}
                 /> 
             }

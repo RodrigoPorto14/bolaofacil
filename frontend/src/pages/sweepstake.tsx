@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { useParticipant } from "../context/ParticipantProvider/useParticipant";
 import { useEffect, useState } from 'react'
-import { RankingHeader, Bet } from '../utils/type'
+import { RankingHeader, Bet } from '../utils/types'
 import { makePrivateRequest } from "../utils/request";
 import { toast } from "react-toastify";
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { makeRequest } from "../utils/request";
+import { makeRequest } from "../../utils/request";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 

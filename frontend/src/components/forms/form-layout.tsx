@@ -1,9 +1,9 @@
 import BackButton from "../buttons/button-back";
 import DeleteButton from "../buttons/button-delete";
 import MainButton from "../buttons/button-main";
-import { FormProps } from "../../utils/type";
+import { FormProps } from "../../utils/types";
 
-const FormLayout = ({children, onSubmit, buttonName, onDelete, resource, create=false} : FormProps ) =>
+const FormLayout = ({children, onSubmit, buttonName, onDelete, resource, create, backButton=true} : FormProps ) =>
 {
     return(
         <>
@@ -19,7 +19,7 @@ const FormLayout = ({children, onSubmit, buttonName, onDelete, resource, create=
                     </div>
                                 
                     <div className="flex gap-4 flex-wrap justify-center">
-                        <BackButton />
+                        { backButton && <BackButton /> }
                         <MainButton> {buttonName} </MainButton>
                         { onDelete && <DeleteButton onClick={onDelete} /> }
                     </div>

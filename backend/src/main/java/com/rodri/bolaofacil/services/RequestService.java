@@ -1,6 +1,7 @@
 package com.rodri.bolaofacil.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -44,7 +45,7 @@ public class RequestService {
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Request> requests = requestRep.findAllBySweepstake(sweepstake);
-			return requests.stream().map(request -> new RequestDTO(request)).toList();
+			return requests.stream().map(request -> new RequestDTO(request)).collect(Collectors.toList());
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}

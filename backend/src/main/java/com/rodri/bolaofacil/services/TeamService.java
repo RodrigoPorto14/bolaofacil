@@ -2,6 +2,7 @@ package com.rodri.bolaofacil.services;
 
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -54,7 +55,7 @@ public class TeamService {
 		{
 			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
 			List<Team> teams = teamRep.findAllBySweepstake(sweepstake);
-			return teams.stream().map(team -> new TeamSampleDTO(team)).toList();
+			return teams.stream().map(team -> new TeamSampleDTO(team)).collect(Collectors.toList());
 		}
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
@@ -91,10 +92,8 @@ public class TeamService {
 	
 	public void delete(Long sweepstakeId, Long id) 
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
-			//Team team = teamRep.getReferenceById(id);
 			Team team = teamRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
 			authService.resourceBelongsSweepstake(team.getSweepstake().getId(), sweepstakeId);
 			teamRep.delete(team);

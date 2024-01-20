@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Input from "../inputs/input";
 import InputNumber from "../inputs/input-number";
 import FormLayout from './form-layout';
-import { Rule, FormProps } from '../../utils/type';
+import { Rule, FormProps } from '../../utils/types';
 
 
 
@@ -61,7 +61,7 @@ const RuleForm = ({ onSubmit, buttonName, resource, onDelete, create=false } : F
                     register={register}
                     errors={errors}
                     defaultValue={(resource as Rule)?.winnerScore}
-                    tooltip="Pontos ganhos ao acertar o placar do vencedor"
+                    tooltip="Pontos ganhos ao acertar o vencedor e seu placar"
                 />
 
                 <InputNumber<RuleFormData>

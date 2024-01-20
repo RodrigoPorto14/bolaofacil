@@ -1,14 +1,14 @@
-import Header from "../components/header/header"
-import MenuLayout from "../components/menu/menu-layout"
-import { ConfigItems } from "../utils/nav-items"
+import Header from "../../components/header/header"
+import MenuLayout from "../../components/menu/menu-layout"
+import { ConfigItems } from "../../utils/nav-items"
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { makePrivateRequest } from "../utils/request"
-import MenuItem from "../components/menu/menu-item"
+import { makePrivateRequest } from "../../utils/request"
+import MenuItem from "../../components/menu/menu-item"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
-import OverflowContainer from "../components/menu/overflow-container"
-import BackButton from "../components/buttons/button-back"
+import OverflowContainer from "../../components/menu/overflow-container"
+import BackButton from "../../components/buttons/button-back"
 
 type RequestSample = 
 {
@@ -77,12 +77,16 @@ const ShowRequest = () =>
                                     onClick={() => onAccept(request)}
                                     icon={faCheck}
                                     className="text-2xl hover:text-brand-200 hover:cursor-pointer"
+                                    data-tooltip-id="tooltip" 
+                                    data-tooltip-content="Aceitar" 
                                 />
 
                                 <FontAwesomeIcon 
                                     onClick={() => onDelete(request)}
                                     icon={faXmark}
                                     className="text-2xl hover:text-red-500 hover:cursor-pointer"
+                                    data-tooltip-id="tooltip" 
+                                    data-tooltip-content="Recusar" 
                                 />
                                 
                             </div>

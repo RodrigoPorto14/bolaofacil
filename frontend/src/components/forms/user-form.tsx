@@ -43,7 +43,7 @@ const UserForm = ({ setIsUserForm } : { setIsUserForm : (b : boolean) => void })
 
     return(
 
-        <FormLayout onSubmit={handleSubmit(onSubmit)} buttonName="ATUALIZAR" create={true}>
+        <FormLayout onSubmit={handleSubmit(onSubmit)} buttonName="ATUALIZAR" create={true} backButton={false}>
                              
             <Input<UserFormData>
                 label="Apelido"

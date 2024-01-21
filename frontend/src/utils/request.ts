@@ -11,10 +11,10 @@ export type LoginData =
   password: String;
 }
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? '175294304';
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'MRgSyuWzM4W%^7KN';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ?? 'https://meubolaofacil.com';
+export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL ?? 'https://bolaofacil.netlify.app';
 
 /****************************************************************** 
 Intercepta requisições axios, caso essa requisição tenha sucesso,

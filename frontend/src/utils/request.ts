@@ -35,8 +35,8 @@ axios.interceptors.response.use(
 
       if(errorStatus === 403 || (errorStatus === 404 && !error.response.data.message))
       {
-         history.replace('/404');
-         history.go(0);
+         //history.replace('/404');
+         //history.go(0);
       }
 
       if(errorStatus === 422)
@@ -57,6 +57,7 @@ já inserida
 ******************************************************************/
 export const makeRequest = (params: AxiosRequestConfig) => 
 {
+  console.log(BACKEND_URL);
   return axios(
   {
     ...params,

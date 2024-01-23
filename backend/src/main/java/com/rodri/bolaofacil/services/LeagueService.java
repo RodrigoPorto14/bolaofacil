@@ -39,11 +39,11 @@ public class LeagueService {
 	@Transactional(readOnly=true)
 	public List<LeagueDTO> findAll()
 	{
-		List<League> leagues = leagueRep.findAll();
+		List<League> leagues = leagueRep.findByIsActiveTrue();
 		return leagues.stream().map(league -> new LeagueDTO(league)).collect(Collectors.toList());
 	}
 	
-	public List<MatchDTO> getMatches(String leagueEndpoint){ return request(leaguesAPI + leagueEndpoint); }
+	public List<MatchDTO> getMatches(String endpoint, String season){ return request(leaguesAPI + endpoint + "/" + season); }
 		
 	private List<MatchDTO> request(String url)
 	{

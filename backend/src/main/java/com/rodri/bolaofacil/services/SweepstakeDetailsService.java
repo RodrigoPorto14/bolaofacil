@@ -21,6 +21,7 @@ import com.rodri.bolaofacil.dto.MatchDTO;
 import com.rodri.bolaofacil.dto.RuleDTO;
 import com.rodri.bolaofacil.dto.SweepstakeDetailsDTO;
 import com.rodri.bolaofacil.enitities.ExternalBet;
+import com.rodri.bolaofacil.enitities.League;
 import com.rodri.bolaofacil.enitities.Participant;
 import com.rodri.bolaofacil.enitities.Sweepstake;
 import com.rodri.bolaofacil.enitities.User;
@@ -86,8 +87,10 @@ public class SweepstakeDetailsService {
 	
 	private SweepstakeDetailsDTO findExternalDetails(Participant participant, Sweepstake sweepstake, Integer page, int size)
 	{
-		String leagueEndpoint = sweepstake.getLeague().getEndpoint();
-		List<MatchDTO> matches = leagueService.getMatches(leagueEndpoint);
+		League league = sweepstake.getLeague();
+		String leagueEndpoint = league.getEndpoint();
+		String leagueSeason = league.getSeason();
+		List<MatchDTO> matches = leagueService.getMatches(leagueEndpoint, leagueSeason);
 		
 		Collections.sort(matches);
 		

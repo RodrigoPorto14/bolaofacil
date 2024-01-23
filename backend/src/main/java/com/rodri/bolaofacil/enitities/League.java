@@ -20,14 +20,18 @@ public class League implements Serializable {
 	
 	private String name;
 	private String endpoint;
+	private String season;
+	private boolean isActive;
 	private boolean isCustom;
 	
 	public League() {}
 
-	public League(Long id, String name, String endpoint, boolean isCustom) {
+	public League(Long id, String name, String endpoint, String season, boolean isActive, boolean isCustom) {
 		this.id = id;
 		this.name = name;
 		this.endpoint = endpoint;
+		this.season = season;
+		this.isActive = isActive;
 		this.isCustom = isCustom;
 	}
 
@@ -70,6 +74,22 @@ public class League implements Serializable {
 		this.endpoint = endpoint;
 	}
 
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 
 	@Override
 	public int hashCode() {

@@ -1,12 +1,10 @@
 import Header from '../components/header/header'
-import Footer from '../components/footer/footer'
 import MainButton from '../components/buttons/button-main'
 
 const bolaoFacil = require('../img/bolao.png') as string;
 
 const h2Class = "text-left text-sm font-bold";
 const paragraphSize = "text-sm";
-const divClass = ""
 
 
 const Home = () =>

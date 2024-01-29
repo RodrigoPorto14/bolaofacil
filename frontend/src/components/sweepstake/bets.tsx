@@ -59,8 +59,6 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
             await sendBets(bet);   
         }
-
-        getMatcheswithBets(pageNumber);
         
     }
 
@@ -209,7 +207,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
             </div>
 
             <div className="mx-auto">
-                <MainButton onClick={onSaveBets}> SALVAR PALPITES </MainButton>
+                <MainButton onClick={async () => {await onSaveBets(); getMatcheswithBets(pageNumber); }}> SALVAR PALPITES </MainButton>
             </div>
             
         </div>

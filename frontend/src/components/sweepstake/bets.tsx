@@ -23,11 +23,11 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
     const {sweepstakeId} = useParams();
 
-    const sendBets = (bet : Bet) =>
+    const sendBets = async (bet : Bet) =>
     {
         
         const data = {matchId: bet.match.id, homeTeamScore: bet.homeTeamScore, awayTeamScore: bet.awayTeamScore};
-        makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method : 'POST'})
+        await makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method : 'POST'})
             .then(response =>
             {
                 
@@ -38,7 +38,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
             })
     }
 
-    const onSaveBets = () =>
+    const onSaveBets = async () =>
     {
         for(const bet of bets)
         {
@@ -57,7 +57,7 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
                 continue;
             }
 
-            sendBets(bet);   
+            await sendBets(bet);   
         }
 
         getMatcheswithBets(pageNumber);

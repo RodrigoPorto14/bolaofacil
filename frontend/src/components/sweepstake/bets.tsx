@@ -23,52 +23,44 @@ const Bets = ({bets, pageNumber, lastPage, setBets, getMatcheswithBets} : BetsPr
 
     const {sweepstakeId} = useParams();
 
-    const sendBets = async (bet : Bet, bets : Bet[]) =>
+    const sendBets = (bet : Bet) =>
     {
         
         const data = {matchId: bet.match.id, homeTeamScore: bet.homeTeamScore, awayTeamScore: bet.awayTeamScore};
-        await makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method : 'POST'})
+        makePrivateRequest({url : `boloes/${sweepstakeId}/bets`, data, method : 'POST'})
             .then(response =>
             {
-                bet.originalHomeTeamScore = bet.homeTeamScore;
-                bet.originalAwayTeamScore = bet.awayTeamScore;
-                bet.error = false;
-                setBets(bets)
+                
             })
             .catch(error => 
             {
                 toast.error(error.response.data.message);
-                bet.homeTeamScore = bet.originalHomeTeamScore;
-                bet.awayTeamScore = bet.originalAwayTeamScore;
-                setBets(bets)
             })
     }
 
-    const onSaveBets = async () =>
+    const onSaveBets = () =>
     {
-        const updatedValues = [...bets];
-        for(const bet of updatedValues)
+        for(const bet of bets)
         {
             if(notChangeBet(bet))
                 continue;
             
             if(invalidBet(bet))
             {
-                bet.error = true;
-                setBets(updatedValues)
+                toast.error("Placar inválido");
                 continue;
             }
 
             if(isPastDate(bet.match.startMoment))
             {
-                bet.homeTeamScore = bet.originalHomeTeamScore;
-                bet.awayTeamScore = bet.originalAwayTeamScore;
-                setBets(updatedValues)
+                toast.error("A partida já começou");
                 continue;
             }
 
-            await sendBets(bet, updatedValues);   
+            sendBets(bet);   
         }
+
+        getMatcheswithBets(pageNumber);
         
     }
 

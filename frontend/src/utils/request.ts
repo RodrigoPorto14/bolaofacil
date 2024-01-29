@@ -11,10 +11,10 @@ export type LoginData =
   password: String;
 }
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL;
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'bolaofacil';
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? '1234567';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
+export const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL ?? 'http://localhost:3000';
 
 /****************************************************************** 
 Intercepta requisições axios, caso essa requisição tenha sucesso,

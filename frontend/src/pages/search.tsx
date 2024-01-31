@@ -75,6 +75,7 @@ const Search = () =>
                     <div className="relative h-8 w-4/5 mx-auto">
                         <input
                             type="text"
+                            placeholder="Pesquise pelo nome ou dono do bolão aqui"
                             className="w-full h-full rounded-lg px-2"
                             value={inputValue}
                             onChange={handleInputChange}

@@ -1,6 +1,6 @@
 package com.rodri.bolaofacil.dto;
 
-import com.rodri.bolaofacil.enitities.Participant;
+import com.rodri.bolaofacil.entities.Participant;
 
 public class ParticipantSampleDTO extends ParticipantUpdateDTO {
 	private static final long serialVersionUID = 1L;

@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.rodri.bolaofacil.dto.BetDTO;
-import com.rodri.bolaofacil.enitities.Bet;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.pk.BetPK;
+import com.rodri.bolaofacil.entities.Bet;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
+import com.rodri.bolaofacil.entities.pk.BetPK;
 
 @Repository
 public interface BetRepository extends JpaRepository<Bet,BetPK>{

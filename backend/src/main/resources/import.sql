@@ -17,14 +17,40 @@ INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('er
 INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('liga-portugal', false, 'Liga Portugal', '2023', true);
 INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('eurocopa', false, 'Eurocopa', '2024', true);
 INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('world-cup', false, 'Copa do Mundo', '2022', true);
+INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('libertadores', false, 'Libertadores', '2024', true);
+INSERT INTO tb_league (endpoint, is_custom, name, season, is_active) VALUES ('cblol-academy', false, 'CBLOL Academy', '2024-1', true);
 
 INSERT INTO tb_sweepstake (name, is_private, league_id) VALUES ('UCL 23/24', false, 3);
+INSERT INTO tb_sweepstake (name, is_private, league_id) VALUES ('Carioca 2023', false, 1);
+INSERT INTO tb_sweepstake (name, is_private, league_id) VALUES ('Paulistão', false, 1);
 
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (1, 1, 2, NOW());
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (2, 1, 0, NOW());
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (3, 1, 0, NOW());
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (4, 1, 0, NOW());
 INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (5, 1, 0, NOW());
+
+INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (1, 2, 2, NOW());
+INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (2, 2, 0, NOW());
+INSERT INTO tb_participant (user_id, sweepstake_id, role, last_access) VALUES (3, 2, 0, NOW());
+
+INSERT INTO tb_rule (sweepstake_id, name, exact_score, winner_score, score_difference, loser_score, winner) VALUES (2,'Fase de Grupos', 25, 18, 15, 12, 10);
+INSERT INTO tb_rule (sweepstake_id, name, exact_score, winner_score, score_difference, loser_score, winner) VALUES (2,'Eliminatórias', 25, 18, 15, 12, 10);
+
+INSERT INTO tb_team (sweepstake_id, name, img_uri) VALUES (2, 'Vasco', 'https://upload.wikimedia.org/wikipedia/pt/thumb/a/ac/CRVascodaGama.png/180px-CRVascodaGama.png');
+INSERT INTO tb_team (sweepstake_id, name, img_uri) VALUES (2, 'Flamengo', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_braz_logo.svg/180px-Flamengo_braz_logo.svg.png');
+INSERT INTO tb_team (sweepstake_id, name, img_uri) VALUES (2, 'Botafogo', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg/180px-Botafogo_de_Futebol_e_Regatas_logo.svg.png');
+INSERT INTO tb_team (sweepstake_id, name, img_uri) VALUES (2, 'Fluminense', 'https://upload.wikimedia.org/wikipedia/pt/thumb/a/a3/FFC_escudo.svg/195px-FFC_escudo.svg.png');
+
+INSERT INTO tb_match (sweepstake_id, rule_id, type, home_team_id, away_team_id, home_team_score, away_team_score, start_moment) VALUES (2,1,0,1,2,2,1, NOW());
+INSERT INTO tb_match (sweepstake_id, rule_id, type, home_team_id, away_team_id, home_team_score, away_team_score, start_moment) VALUES (2,1,0,3,4,1,1, DATEADD('DAY', 1, NOW()));
+INSERT INTO tb_match (sweepstake_id, rule_id, type, home_team_id, away_team_id, home_team_score, away_team_score, start_moment) VALUES (2,1,0,1,3,3,0, NOW());
+INSERT INTO tb_match (sweepstake_id, rule_id, type, home_team_id, away_team_id, home_team_score, away_team_score, start_moment) VALUES (2,1,0,2,4,2,0, DATEADD('DAY', 1, NOW()));
+
+INSERT INTO tb_bet (user_id, sweepstake_id, match_id, home_team_score, away_team_score) VALUES (1,2,1,4,1);
+INSERT INTO tb_bet (user_id, sweepstake_id, match_id, home_team_score, away_team_score) VALUES (2,2,1,2,1);
+INSERT INTO tb_bet (user_id, sweepstake_id, match_id, home_team_score, away_team_score) VALUES (1,2,2,1,1);
+INSERT INTO tb_bet (user_id, sweepstake_id, match_id, home_team_score, away_team_score) VALUES (2,2,2,1,1);
 
 INSERT INTO tb_external_bet (user_id, sweepstake_id, external_match_id, home_team_score, away_team_score) VALUES (1,1,451613,1,0);
 INSERT INTO tb_external_bet (user_id, sweepstake_id, external_match_id, home_team_score, away_team_score) VALUES (2,1,451613,0,1);

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.rodri.bolaofacil.enitities.Rule;
+import com.rodri.bolaofacil.entities.Rule;
 
 
 public class RuleSampleDTO implements Serializable {

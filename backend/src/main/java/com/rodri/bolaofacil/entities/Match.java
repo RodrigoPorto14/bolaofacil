@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.rodri.bolaofacil.enitities.enums.MatchType;
+import com.rodri.bolaofacil.entities.enums.MatchType;
 
 
 @Entity

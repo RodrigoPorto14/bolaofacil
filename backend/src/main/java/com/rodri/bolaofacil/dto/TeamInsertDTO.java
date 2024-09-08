@@ -1,26 +1,30 @@
 package com.rodri.bolaofacil.dto;
 
-import com.rodri.bolaofacil.enitities.Team;
+import javax.validation.constraints.NotNull;
 
-public class TeamDTO extends TeamSampleDTO {
+import com.rodri.bolaofacil.entities.Team;
+
+public class TeamInsertDTO extends TeamUpdateDTO {
 	private static final long serialVersionUID = 1L;
 	
-	private String imgUri;
+	@NotNull
+	private Long sweepstakeId;
 	
-	public TeamDTO() {}
+	public TeamInsertDTO() {}
 
-	public TeamDTO(Team entity)
+	public TeamInsertDTO(Team entity)
 	{
 		super(entity);
-		imgUri = entity.getImgUri();
+		sweepstakeId = entity.getSweepstake().getId();
 	}
 
-	public TeamDTO(Long id, String name, String imgUri) {
-		super(id, name);
-		this.imgUri = imgUri;
+	public TeamInsertDTO(Long id, String name, String imgUri, Long sweepstakeId) {
+		super(id, name, imgUri);
+		this.sweepstakeId = sweepstakeId;
 	}
 
-	public String getImgUri() {
-		return imgUri;
+	public Long getSweepstakeId() {
+		return sweepstakeId;
 	}
+	
 }

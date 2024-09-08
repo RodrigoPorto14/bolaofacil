@@ -5,9 +5,9 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.rodri.bolaofacil.enitities.Team;
+import com.rodri.bolaofacil.entities.Team;
 
-public class TeamSampleDTO implements Serializable {
+public class TeamUpdateDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -15,17 +15,21 @@ public class TeamSampleDTO implements Serializable {
 	@NotBlank @Size(max = 20)
 	private String name;
 	
-	public TeamSampleDTO() {}
+	private String imgUri;
 	
-	public TeamSampleDTO(Long id, String name) {
+	public TeamUpdateDTO() {}
+	
+	public TeamUpdateDTO(Long id, String name, String imgUri) {
 		this.id = id;
 		this.name = name;
+		this.imgUri = imgUri;
 	}
 
-	public TeamSampleDTO(Team entity)
+	public TeamUpdateDTO(Team entity)
 	{
 		id = entity.getId();
 		name = entity.getName();
+		imgUri = entity.getImgUri();
 	}
 
 	public Long getId() {
@@ -34,5 +38,9 @@ public class TeamSampleDTO implements Serializable {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getImgUri() {
+		return imgUri;
 	}
 }

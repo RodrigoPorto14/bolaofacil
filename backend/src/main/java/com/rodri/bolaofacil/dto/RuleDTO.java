@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-import com.rodri.bolaofacil.enitities.Rule;
+import com.rodri.bolaofacil.entities.Rule;
 
 
 public class RuleDTO extends RuleSampleDTO {
@@ -21,6 +21,8 @@ public class RuleDTO extends RuleSampleDTO {
 	@NotNull @Max(value = 99) @PositiveOrZero
 	private Integer winner;
 	
+	private Long sweepstakeId;
+	
 	public RuleDTO() {}
 
 	public RuleDTO(Rule entity) {
@@ -30,16 +32,18 @@ public class RuleDTO extends RuleSampleDTO {
 		scoreDifference = entity.getScoreDifference();
 		loserScore = entity.getLoserScore();
 		winner = entity.getWinner();
+		sweepstakeId = entity.getSweepstake().getId();
 		
 	}
 	
-	public RuleDTO(Integer exactScore, Integer winnerScore, Integer scoreDifference, Integer loserScore, Integer winner) 
+	public RuleDTO(Integer exactScore, Integer winnerScore, Integer scoreDifference, Integer loserScore, Integer winner, Long sweepstakeId) 
 	{
 		this.exactScore = exactScore;
 		this.winnerScore = winnerScore;
 		this.scoreDifference = scoreDifference;
 		this.loserScore = loserScore;
 		this.winner = winner;
+		this.sweepstakeId = sweepstakeId;
 	}
 
 	public Integer getExactScore() {
@@ -61,4 +65,9 @@ public class RuleDTO extends RuleSampleDTO {
 	public Integer getWinner() {
 		return winner;
 	}
+
+	public Long getSweepstakeId() {
+		return sweepstakeId;
+	}
+	
 }

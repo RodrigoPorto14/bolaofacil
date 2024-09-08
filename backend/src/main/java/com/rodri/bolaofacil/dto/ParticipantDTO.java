@@ -1,7 +1,7 @@
 package com.rodri.bolaofacil.dto;
 
-import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Sweepstake;
 
 public class ParticipantDTO extends ParticipantUpdateDTO
 {

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rodri.bolaofacil.dto.SweepstakeDTO;
-import com.rodri.bolaofacil.enitities.League;
-import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.enums.Role;
+import com.rodri.bolaofacil.entities.League;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
+import com.rodri.bolaofacil.entities.enums.Role;
 import com.rodri.bolaofacil.repositories.LeagueRepository;
 import com.rodri.bolaofacil.repositories.ParticipantRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;

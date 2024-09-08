@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.rodri.bolaofacil.enitities.User;
+import com.rodri.bolaofacil.entities.User;
 
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

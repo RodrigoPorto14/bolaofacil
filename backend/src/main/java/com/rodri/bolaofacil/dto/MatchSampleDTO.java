@@ -3,7 +3,7 @@ package com.rodri.bolaofacil.dto;
 import java.io.Serializable;
 import java.time.Instant;
 
-import com.rodri.bolaofacil.enitities.Match;
+import com.rodri.bolaofacil.entities.Match;
 
 public class MatchSampleDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rodri.bolaofacil.enitities.Match;
-import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.entities.Match;
+import com.rodri.bolaofacil.entities.Sweepstake;
 
 @Repository
 public interface MatchRepository extends JpaRepository<Match,Long>{

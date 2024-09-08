@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.rodri.bolaofacil.dto.LeagueDTO;
 import com.rodri.bolaofacil.dto.MatchDTO;
-import com.rodri.bolaofacil.enitities.League;
+import com.rodri.bolaofacil.entities.League;
 import com.rodri.bolaofacil.repositories.ExternalBetRepository;
 import com.rodri.bolaofacil.repositories.LeagueRepository;
 

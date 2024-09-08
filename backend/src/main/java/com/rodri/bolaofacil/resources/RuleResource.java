@@ -22,42 +22,42 @@ import com.rodri.bolaofacil.dto.RuleSampleDTO;
 import com.rodri.bolaofacil.services.RuleService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}/regras")
+@RequestMapping()
 public class RuleResource {
 
 	@Autowired
 	RuleService service;
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<RuleDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@GetMapping(value = "/regras/{id}")
+	public ResponseEntity<RuleDTO> findById(@PathVariable Long id)
 	{
-		return ResponseEntity.ok().body(service.findById(sweepstakeId,id));
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 	
-	@GetMapping()
+	@GetMapping(value = "/boloes/{sweepstakeId}/regras")
 	public ResponseEntity<List<RuleSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping()
-	public ResponseEntity<RuleDTO> insert(@PathVariable Long sweepstakeId, @Valid @RequestBody RuleDTO dto)
+	@PostMapping(value = "/regras")
+	public ResponseEntity<RuleDTO> insert(@Valid @RequestBody RuleDTO dto)
 	{
-		dto = service.insert(sweepstakeId, dto);
+		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<RuleDTO> update(@PathVariable Long sweepstakeId,@PathVariable Long id, @Valid @RequestBody RuleDTO dto)
+	@PutMapping(value = "/regras/{id}")
+	public ResponseEntity<RuleDTO> update(@PathVariable Long id, @Valid @RequestBody RuleDTO dto)
 	{
-		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
+		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 	
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@DeleteMapping(value = "/regras/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id)
 	{
-		service.delete(sweepstakeId,id);
+		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }

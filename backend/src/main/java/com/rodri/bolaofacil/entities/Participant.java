@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -8,8 +8,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.rodri.bolaofacil.enitities.enums.Role;
-import com.rodri.bolaofacil.enitities.pk.ParticipantPK;
+import com.rodri.bolaofacil.entities.enums.Role;
+import com.rodri.bolaofacil.entities.pk.ParticipantPK;
 
 @Entity
 @Table(name = "tb_participant")

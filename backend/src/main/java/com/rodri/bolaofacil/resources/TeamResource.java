@@ -14,60 +14,57 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rodri.bolaofacil.dto.TeamDTO;
-import com.rodri.bolaofacil.dto.TeamSampleDTO;
-import com.rodri.bolaofacil.dto.UriDTO;
+import com.rodri.bolaofacil.dto.TeamInsertDTO;
+import com.rodri.bolaofacil.dto.TeamUpdateDTO;
 import com.rodri.bolaofacil.services.TeamService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}/times")
+@RequestMapping()
 public class TeamResource {
 
 	@Autowired
 	TeamService service;
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<TeamDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@GetMapping(value = "/times/{id}")
+	public ResponseEntity<TeamInsertDTO> findById(@PathVariable Long id)
 	{
-		return ResponseEntity.ok().body(service.findById(sweepstakeId,id));
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 	
-	@GetMapping()
-	public ResponseEntity<List<TeamSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
+	@GetMapping(value = "/boloes/{sweepstakeId}/times")
+	public ResponseEntity<List<TeamUpdateDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping()
-	public ResponseEntity<TeamDTO> insert(@PathVariable Long sweepstakeId, @Valid @RequestBody TeamDTO dto)
+	@PostMapping(value = "/times")
+	public ResponseEntity<TeamInsertDTO> insert(@Valid @RequestBody TeamInsertDTO dto)
 	{
-		dto = service.insert(sweepstakeId, dto);
+		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<TeamDTO> update(@PathVariable Long sweepstakeId,@PathVariable Long id, @Valid @RequestBody TeamDTO dto)
+	@PutMapping(value = "/times/{id}")
+	public ResponseEntity<TeamUpdateDTO> update(@PathVariable Long id, @Valid @RequestBody TeamUpdateDTO dto)
 	{
-		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
+		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 	
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@DeleteMapping(value = "/times/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id)
 	{
-		service.delete(sweepstakeId,id);
+		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PostMapping(value = "/upload")
-	public ResponseEntity<UriDTO> uploadFile(@PathVariable Long sweepstakeId, @RequestParam("file") MultipartFile file)
-	{
-		UriDTO dto = service.uploadFile(sweepstakeId, file);
-		return ResponseEntity.ok().body(dto);
-	}
+//	@PostMapping(value = "/upload")
+//	public ResponseEntity<UriDTO> uploadFile(@PathVariable Long sweepstakeId, @RequestParam("file") MultipartFile file)
+//	{
+//		UriDTO dto = service.uploadFile(sweepstakeId, file);
+//		return ResponseEntity.ok().body(dto);
+//	}
 }

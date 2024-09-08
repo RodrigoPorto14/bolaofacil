@@ -5,8 +5,8 @@ import java.time.Instant;
 
 import javax.validation.constraints.NotNull;
 
-import com.rodri.bolaofacil.enitities.Match;
-import com.rodri.bolaofacil.enitities.enums.MatchType;
+import com.rodri.bolaofacil.entities.Match;
+import com.rodri.bolaofacil.entities.enums.MatchType;
 
 public class MatchInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,7 @@ public class MatchInsertDTO implements Serializable {
 	private Long homeTeamId;
 	@NotNull
 	private Long awayTeamId;
+	private Long sweepstakeId;
 	
 	public MatchInsertDTO() {}
 
@@ -34,6 +35,7 @@ public class MatchInsertDTO implements Serializable {
 		startMoment = entity.getStartMoment();
 		homeTeamId = entity.getHomeTeam().getId();
 		awayTeamId = entity.getAwayTeam().getId();
+		sweepstakeId = entity.getSweepstake().getId();
 	}
 
 	public Long getId() {
@@ -59,4 +61,9 @@ public class MatchInsertDTO implements Serializable {
 	public Long getAwayTeamId() {
 		return awayTeamId;
 	}
+
+	public Long getSweepstakeId() {
+		return sweepstakeId;
+	}
+	
 }

@@ -2,7 +2,7 @@ package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
 
-import com.rodri.bolaofacil.enitities.League;
+import com.rodri.bolaofacil.entities.League;
 
 public class LeagueDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

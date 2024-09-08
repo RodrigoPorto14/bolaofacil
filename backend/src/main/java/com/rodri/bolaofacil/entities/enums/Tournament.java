@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities.enums;
+package com.rodri.bolaofacil.entities.enums;
 
 public enum Tournament {
 	

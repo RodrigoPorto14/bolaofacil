@@ -2,7 +2,7 @@ package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
 
-import com.rodri.bolaofacil.enitities.Request;
+import com.rodri.bolaofacil.entities.Request;
 
 
 public class RequestDTO implements Serializable{

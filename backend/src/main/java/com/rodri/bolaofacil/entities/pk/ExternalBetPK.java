@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities.pk;
+package com.rodri.bolaofacil.entities.pk;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,8 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
 
 @Embeddable
 public class ExternalBetPK implements Serializable {

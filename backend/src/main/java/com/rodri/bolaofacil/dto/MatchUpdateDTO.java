@@ -3,7 +3,7 @@ package com.rodri.bolaofacil.dto;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.PositiveOrZero;
 
-import com.rodri.bolaofacil.enitities.Match;
+import com.rodri.bolaofacil.entities.Match;
 
 public class MatchUpdateDTO extends MatchInsertDTO{
 	private static final long serialVersionUID = 1L;

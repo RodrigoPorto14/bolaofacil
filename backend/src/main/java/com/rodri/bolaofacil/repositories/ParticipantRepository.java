@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.pk.ParticipantPK;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.pk.ParticipantPK;
 
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant,ParticipantPK>{

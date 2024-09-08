@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rodri.bolaofacil.dto.RequestDTO;
-import com.rodri.bolaofacil.enitities.Request;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.pk.RequestPK;
+import com.rodri.bolaofacil.entities.Request;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
+import com.rodri.bolaofacil.entities.pk.RequestPK;
 import com.rodri.bolaofacil.repositories.RequestRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.repositories.UserRepository;

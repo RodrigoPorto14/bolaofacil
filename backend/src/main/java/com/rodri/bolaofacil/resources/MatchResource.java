@@ -23,42 +23,42 @@ import com.rodri.bolaofacil.dto.MatchUpdateDTO;
 import com.rodri.bolaofacil.services.MatchService;
 
 @RestController
-@RequestMapping(value = "/boloes/{sweepstakeId}/partidas")
+@RequestMapping()
 public class MatchResource {
 
 	@Autowired
 	MatchService service;
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<MatchUpdateDTO> findById(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@GetMapping(value = "/partidas/{id}")
+	public ResponseEntity<MatchUpdateDTO> findById(@PathVariable Long id)
 	{
-		return ResponseEntity.ok().body(service.findById(sweepstakeId,id));
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 	
-	@GetMapping()
+	@GetMapping(value = "/boloes/{sweepstakeId}/partidas")
 	public ResponseEntity<List<MatchSampleDTO>> findAllBySweepstake(@PathVariable Long sweepstakeId)
 	{
 		return ResponseEntity.ok().body(service.findAllBySweepstake(sweepstakeId));
 	}
 	
-	@PostMapping()
-	public ResponseEntity<MatchInsertDTO> insert(@PathVariable Long sweepstakeId, @Valid @RequestBody MatchInsertDTO dto)
+	@PostMapping(value = "/partidas")
+	public ResponseEntity<MatchInsertDTO> insert(@Valid @RequestBody MatchInsertDTO dto)
 	{
-		dto = service.insert(sweepstakeId, dto);
+		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<MatchUpdateDTO> update(@PathVariable Long sweepstakeId, @PathVariable Long id, @Valid @RequestBody MatchUpdateDTO dto)
+	@PutMapping(value = "/partidas/{id}")
+	public ResponseEntity<MatchUpdateDTO> update(@PathVariable Long id, @Valid @RequestBody MatchUpdateDTO dto)
 	{
-		return ResponseEntity.ok().body(service.update(sweepstakeId, id, dto));
+		return ResponseEntity.ok().body(service.update(id, dto));
 	}
 	
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long sweepstakeId, @PathVariable Long id)
+	@DeleteMapping(value = "/partidas/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id)
 	{
-		service.delete(sweepstakeId,id);
+		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class Sweepstake implements Serializable {
 	
 	public Sweepstake() {}
 	
-	public Sweepstake(Long id, String name, boolean isPrivate, User owner, League league) {
+	public Sweepstake(Long id, String name, boolean isPrivate, League league) {
 		this.id = id;
 		this.name = name;
 		this.isPrivate = isPrivate;

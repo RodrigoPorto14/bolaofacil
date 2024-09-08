@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -7,7 +7,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.rodri.bolaofacil.enitities.pk.BetPK;
+import com.rodri.bolaofacil.entities.pk.BetPK;
 
 @Entity
 @Table(name = "tb_bet")

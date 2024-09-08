@@ -1,18 +1,21 @@
 package com.rodri.bolaofacil.services;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.enums.Role;
-import com.rodri.bolaofacil.enitities.pk.ParticipantPK;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
+import com.rodri.bolaofacil.entities.enums.Role;
+import com.rodri.bolaofacil.entities.pk.ParticipantPK;
 import com.rodri.bolaofacil.repositories.ParticipantRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.repositories.UserRepository;
+import com.rodri.bolaofacil.services.exceptions.DataBaseException;
 import com.rodri.bolaofacil.services.exceptions.ForbiddenException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;
 import com.rodri.bolaofacil.services.exceptions.UnauthorizedException;
@@ -40,51 +43,44 @@ public class AuthService {
 		catch(Exception e) { throw new UnauthorizedException(); }
 	}
 	
-	@Transactional
-	private void sweepstakeIsCustom(Long sweepstakeId)
+	public void sweepstakeIsCustom(Sweepstake sweepstake)
 	{
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId)
-											 .orElseThrow(() -> new ResourceNotFoundException());
-		
 		if(!sweepstake.getLeague().isCustom())
-			throw new ForbiddenException();
+			throw new DataBaseException("O bolão não é personalizado");
 	}
-	
 	
 	public Participant validateParticipant(Long sweepstakeId)
 	{
-		Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
-		User user = authenticated();
-		ParticipantPK participantId = new ParticipantPK(user,sweepstake);
-		return participantRep.findById(participantId).orElseThrow(() -> new ForbiddenException());
+		try
+		{
+			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
+			User user = authenticated();
+			ParticipantPK participantId = new ParticipantPK(user,sweepstake);
+			return participantRep.findById(participantId).orElseThrow(() -> new ForbiddenException());
+		}
+		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
-	private void validateRoles(Long sweepstakeId, Role... roles)
+	private Participant validateRoles(Long sweepstakeId, Role... roles)
 	{
 		Participant participant = validateParticipant(sweepstakeId);
 		Role participantRole = participant.getRole();
 		
 		for(Role role : roles) 
 			if(participantRole == role) 
-				return;
+				return participant;
 		
 		throw new ForbiddenException();
 	}
 	
-	public void participantIsOwner(Long sweepstakeId) { validateRoles(sweepstakeId, Role.OWNER); }
+	public Participant participantIsOwner(Long sweepstakeId) { return validateRoles(sweepstakeId, Role.OWNER); }
 	
-	public void participantIsOwnerOrAdmin(Long sweepstakeId) { validateRoles(sweepstakeId, Role.OWNER, Role.ADMIN); }
+	public Participant participantIsOwnerOrAdmin(Long sweepstakeId) { return validateRoles(sweepstakeId, Role.OWNER, Role.ADMIN); }
 	
-	public void resourceBelongsSweepstake(Long resourceId, Long sweepstakeId)
+	public void resourceBelongsSweepstake(Long resourceSweepstakeId, Long sweepstakeId)
 	{
-		if(!resourceId.equals(sweepstakeId))
+		if(!resourceSweepstakeId.equals(sweepstakeId))
 			throw new ForbiddenException();	
-	}
-	
-	public void checkCustomSweepstakeResourcePermissions(Long sweepstakeId)
-	{
-		participantIsOwnerOrAdmin(sweepstakeId);
-		sweepstakeIsCustom(sweepstakeId);
 	}
 	
 }

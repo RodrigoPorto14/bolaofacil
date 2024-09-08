@@ -13,7 +13,7 @@ import com.rodri.bolaofacil.components.JwtUtil;
 import com.rodri.bolaofacil.dto.UserDTO;
 import com.rodri.bolaofacil.dto.UserInsertDTO;
 import com.rodri.bolaofacil.dto.UserPasswordUpdateDTO;
-import com.rodri.bolaofacil.enitities.User;
+import com.rodri.bolaofacil.entities.User;
 import com.rodri.bolaofacil.repositories.UserRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
 import com.rodri.bolaofacil.services.exceptions.ResourceNotFoundException;

@@ -2,8 +2,8 @@ package com.rodri.bolaofacil.dto;
 
 import java.io.Serializable;
 
-import com.rodri.bolaofacil.enitities.Bet;
-import com.rodri.bolaofacil.enitities.ExternalBet;
+import com.rodri.bolaofacil.entities.Bet;
+import com.rodri.bolaofacil.entities.ExternalBet;
 
 public class BetInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rodri.bolaofacil.dto.RuleDTO;
 import com.rodri.bolaofacil.dto.RuleSampleDTO;
-import com.rodri.bolaofacil.enitities.Rule;
-import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Rule;
 import com.rodri.bolaofacil.repositories.RuleRepository;
 import com.rodri.bolaofacil.repositories.SweepstakeRepository;
 import com.rodri.bolaofacil.services.exceptions.DataBaseException;
@@ -33,50 +33,39 @@ public class RuleService {
 	AuthService authService;
 	
 	@Transactional(readOnly=true)
-	public RuleDTO findById(Long sweepstakeId, Long id)
+	public RuleDTO findById(Long id)
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		Rule rule = ruleRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
-		authService.resourceBelongsSweepstake(rule.getSweepstake().getId(), sweepstakeId);
+		authService.participantIsOwnerOrAdmin(rule.getSweepstake().getId());
 		return new RuleDTO(rule);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<RuleSampleDTO> findAllBySweepstake(Long sweepstakeId)
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
-		try
-		{
-			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
-			List<Rule> rules = ruleRep.findAllBySweepstake(sweepstake);
-			return rules.stream().map( rule -> new RuleSampleDTO(rule)).collect(Collectors.toList());
-		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
+		Participant participant = authService.participantIsOwnerOrAdmin(sweepstakeId);
+		List<Rule> rules = ruleRep.findAllBySweepstake(participant.getSweepstake());
+		return rules.stream().map( rule -> new RuleSampleDTO(rule)).collect(Collectors.toList());
 	}
 	
 	@Transactional
-	public RuleDTO insert(Long sweepstakeId, RuleDTO dto)
+	public RuleDTO insert(RuleDTO dto)
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
-		try
-		{
-			Sweepstake sweepstake = sweepstakeRep.getReferenceById(sweepstakeId);
-			Rule rule = copyDtoToEntity(new Rule(), dto);
-			rule.setSweepstake(sweepstake);
-			ruleRep.save(rule);
-			return new RuleDTO(rule);
-		}
-		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
+		Participant participant = authService.participantIsOwnerOrAdmin(dto.getSweepstakeId());
+		authService.sweepstakeIsCustom(participant.getSweepstake());
+		Rule rule = copyDtoToEntity(new Rule(), dto);
+		rule.setSweepstake(participant.getSweepstake());
+		ruleRep.save(rule);
+		return new RuleDTO(rule);
 	}
 	
 	@Transactional
-	public RuleDTO update(Long sweepstakeId, Long id, RuleDTO dto)
+	public RuleDTO update(Long id, RuleDTO dto)
 	{
-		authService.checkCustomSweepstakeResourcePermissions(sweepstakeId);
 		try
 		{
 			Rule rule = ruleRep.getReferenceById(id);
-			authService.resourceBelongsSweepstake(rule.getSweepstake().getId(), sweepstakeId);
+			authService.participantIsOwnerOrAdmin(rule.getSweepstake().getId());
 			rule = copyDtoToEntity(rule,dto);
 			ruleRep.save(rule);
 			return new RuleDTO(rule);
@@ -84,12 +73,13 @@ public class RuleService {
 		catch(EntityNotFoundException e) { throw new ResourceNotFoundException(); }
 	}
 	
-	public void delete(Long sweepstakeId, Long id) 
+	@Transactional
+	public void delete(Long id) 
 	{
 		try
 		{
 			Rule rule = ruleRep.findById(id).orElseThrow(() -> new ResourceNotFoundException());
-			authService.resourceBelongsSweepstake(rule.getSweepstake().getId(), sweepstakeId);
+			authService.participantIsOwnerOrAdmin(rule.getSweepstake().getId());
 			ruleRep.delete(rule);
 		}
 		catch(EmptyResultDataAccessException e){throw new ResourceNotFoundException();}

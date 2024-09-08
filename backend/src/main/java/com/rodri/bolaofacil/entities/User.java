@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.util.Collection;

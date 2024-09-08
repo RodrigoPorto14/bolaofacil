@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.rodri.bolaofacil.enitities.Sweepstake;
+import com.rodri.bolaofacil.entities.Sweepstake;
 
 public class SweepstakeDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

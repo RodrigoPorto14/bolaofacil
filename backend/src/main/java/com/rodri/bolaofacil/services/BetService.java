@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rodri.bolaofacil.dto.BetInsertDTO;
-import com.rodri.bolaofacil.enitities.Bet;
-import com.rodri.bolaofacil.enitities.ExternalBet;
-import com.rodri.bolaofacil.enitities.Match;
-import com.rodri.bolaofacil.enitities.Participant;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.pk.BetPK;
-import com.rodri.bolaofacil.enitities.pk.ExternalBetPK;
+import com.rodri.bolaofacil.entities.Bet;
+import com.rodri.bolaofacil.entities.ExternalBet;
+import com.rodri.bolaofacil.entities.Match;
+import com.rodri.bolaofacil.entities.Participant;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.pk.BetPK;
+import com.rodri.bolaofacil.entities.pk.ExternalBetPK;
 import com.rodri.bolaofacil.repositories.BetRepository;
 import com.rodri.bolaofacil.repositories.ExternalBetRepository;
 import com.rodri.bolaofacil.repositories.MatchRepository;
@@ -45,13 +45,13 @@ public class BetService {
 	public BetInsertDTO insertOrUpdate(Long sweepstakeId, BetInsertDTO dto) 
 	{
 		Participant participant = authService.validateParticipant(sweepstakeId);
-		Sweepstake sweepstake = sweepstakeRep.findById(sweepstakeId).orElseThrow(() -> new ResourceNotFoundException());
+		Sweepstake sweepstake = participant.getSweepstake();
 		
 		if(sweepstake.getLeague().isCustom())
 		{
 			Match match = matchRep.findById(dto.getMatchId()).orElseThrow(() -> new ResourceNotFoundException());
 			authService.resourceBelongsSweepstake(match.getSweepstake().getId(), sweepstakeId);
-			checkMatchAlreadyStarted(match);
+			checkMatchAlreadyStarted(match.getStartMoment());
 			try
 			{
 				BetPK id = new BetPK(participant.getUser(), sweepstake, match);
@@ -88,9 +88,9 @@ public class BetService {
 		}	
 	}
 	
-	private void checkMatchAlreadyStarted(Match match)
+	private void checkMatchAlreadyStarted(Instant matchStartMoment)
 	{
-		if(match.getStartMoment().compareTo(Instant.now()) <= 0)
+		if(matchStartMoment.compareTo(Instant.now()) <= 0)
 			throw new DataBaseException("Essa partida já começou");
 	}
 }

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rodri.bolaofacil.enitities.ExternalBet;
-import com.rodri.bolaofacil.enitities.Sweepstake;
-import com.rodri.bolaofacil.enitities.User;
-import com.rodri.bolaofacil.enitities.pk.ExternalBetPK;
+import com.rodri.bolaofacil.entities.ExternalBet;
+import com.rodri.bolaofacil.entities.Sweepstake;
+import com.rodri.bolaofacil.entities.User;
+import com.rodri.bolaofacil.entities.pk.ExternalBetPK;
 
 @Repository
 public interface ExternalBetRepository extends JpaRepository<ExternalBet,ExternalBetPK>{

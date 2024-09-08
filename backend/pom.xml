@@ -116,6 +116,39 @@
 	                <target>1.8</target>
 	            </configuration>
         	</plugin>
+        	<plugin>
+        		<groupId>org.jacoco</groupId>
+        		<artifactId>jacoco-maven-plugin</artifactId>
+        		<version>0.8.7</version>
+        		<configuration>
+        			<excludes>
+	        			<exclude>com/rodri/bolaofacil/SweepstakeManagerApplication.class</exclude>
+	        			<exclude>com/rodri/bolaofacil/config/**</exclude>
+	        			<exclude>com/rodri/bolaofacil/entities/**</exclude>
+	        			<exclude>com/rodri/bolaofacil/dto/**</exclude>
+	        			<exclude>com/rodri/bolaofacil/components/**</exclude>
+	        			<exclude>com/rodri/bolaofacil/resources/exceptions/**</exclude>
+	        			<exclude>com/rodri/bolaofacil/services/exceptions/**</exclude>
+        			</excludes>
+        		</configuration>
+        		<executions>
+        			<execution>
+        				<goals>
+        					<goal>prepare-agent</goal>
+        				</goals>
+        			</execution>
+        			<execution>
+        				<id>jacoco-report</id>
+        				<phase>prepare-package</phase>
+        				<goals>
+        					<goal>report</goal>
+        				</goals>
+        				<configuration>
+        					<outputDirectory>target/jacoco-report</outputDirectory>
+        				</configuration>
+        			</execution>
+        		</executions>
+        	</plugin>
 		</plugins>
 	</build>
 

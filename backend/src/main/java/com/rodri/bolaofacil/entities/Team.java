@@ -1,4 +1,4 @@
-package com.rodri.bolaofacil.enitities;
+package com.rodri.bolaofacil.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,6 +29,13 @@ public class Team implements Serializable {
 	private Sweepstake sweepstake;
 	
 	public Team() {}
+
+	public Team(Long id, String name, String imgUri) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.imgUri = imgUri;
+	}
 
 	public Long getId() {
 		return id;
